@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gap Finder: find the one math idea you missed</title>
+<meta name="description" content="Gap Finder traces a math struggle back to the exact earlier concept a student missed, then builds a short plan to fix it.">
+<style>
+:root{
+  --paper:#edf2f6; --ink:#12233d; --muted:#4d5f78; --line:#c9d5e2;
+  --blue:#2457d6; --green:#1f8a5b; --red:#c92a5f; --sun:#f2b632; --card:#ffffff;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.55;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:28px 28px;
+  background-position:-1px -1px;
+}
+.wrap{max-width:860px; margin:0 auto; padding:0 18px}
+header.top{border-bottom:2px solid var(--ink); background:var(--paper)}
+header.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; padding-bottom:12px; flex-wrap:wrap}
+.brand{font-family:var(--serif); font-weight:700; font-size:1.35rem; letter-spacing:.2px}
+.brand b{display:inline-grid; place-items:center; width:32px; height:32px; margin-right:8px; background:var(--ink); color:var(--sun); border-radius:4px; font-size:1.1rem}
+.tag{font-size:.9rem; color:var(--muted)}
+h1{font-family:var(--serif); font-size:clamp(1.9rem, 5.4vw, 3rem); line-height:1.1; margin:34px 0 14px; max-width:20ch}
+h2{font-family:var(--serif); font-size:1.5rem; margin:34px 0 10px}
+h3{font-family:var(--serif); font-size:1.15rem; margin:0 0 6px}
+.lead{font-size:1.1rem; max-width:60ch; margin:0 0 22px}
+.card{background:var(--card); border:2px solid var(--ink); border-radius:4px; box-shadow:5px 5px 0 var(--ink); padding:18px; margin:18px 0}
+.hidden{display:none !important}
+.mapbox{overflow-x:auto; background:var(--card); border:2px solid var(--ink); border-radius:4px; box-shadow:5px 5px 0 var(--ink); padding:10px}
+.mapbox svg{display:block; width:100%; min-width:600px; height:auto}
+.legend{display:flex; gap:16px; flex-wrap:wrap; font-size:.88rem; color:var(--muted); margin:10px 2px 0}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; margin-right:6px; border:2px solid var(--ink); border-radius:2px; vertical-align:-1px}
+.legend .l-ok::before{background:#d6f0e1; border-color:var(--green)}
+.legend .l-bad::before{background:#fadbe4; border-color:var(--red)}
+.legend .l-root::before{background:var(--sun); border-color:var(--ink)}
+.legend .l-none::before{background:#f4f7fa; border-color:#8fa1b8}
+.picks{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+button{font:inherit; cursor:pointer}
+.pick{text-align:left; background:var(--card); border:2px solid var(--ink); border-radius:4px; padding:14px 16px; box-shadow:4px 4px 0 var(--ink); color:var(--ink)}
+.pick:hover{background:#f6f9ff}
+.pick strong{display:block; font-family:var(--serif); font-size:1.1rem}
+.pick span{font-size:.93rem; color:var(--muted)}
+.btn{background:var(--blue); color:#fff; border:2px solid var(--ink); border-radius:6px; padding:11px 18px; font-weight:600; box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{filter:brightness(1.08)}
+.btn.alt{background:var(--card); color:var(--ink)}
+.btn:active,.pick:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink)}
+:focus-visible{outline:3px solid var(--sun); outline-offset:2px}
+ol.steps{padding-left:22px; margin:8px 0}
+ol.steps li{margin:6px 0}
+.q-meta{font-size:.92rem; color:var(--muted); margin-bottom:8px}
+.q-text{font-family:var(--serif); font-size:1.6rem; line-height:1.3; margin:6px 0 16px}
+.opts{display:grid; gap:10px}
+.opt{text-align:left; background:var(--card); color:var(--ink); border:2px solid var(--ink); border-radius:4px; padding:12px 14px; font-size:1.08rem}
+.opt:hover:not(:disabled){background:#f0f5ff}
+.opt.ok{background:#d6f0e1; border-color:var(--green)}
+.opt.bad{background:#fadbe4; border-color:var(--red)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px; padding:12px 14px; border-left:6px solid var(--blue); background:#eef3ff}
+.fb.good{border-color:var(--green); background:#e9f7ef}
+.fb.wrong{border-color:var(--red); background:#fdeff3}
+.row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+.progress{height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin:0 0 14px}
+.progress i{display:block; height:100%; background:var(--blue); width:0}
+.found{border-color:var(--ink); background:#fff8e1}
+.found h2{margin-top:0}
+.chip{display:inline-block; background:var(--sun); border:2px solid var(--ink); border-radius:4px; padding:1px 8px; font-weight:700; margin:2px 4px 2px 0}
+.lesson{background:#f5f8fc; border:2px dashed var(--muted); border-radius:4px; padding:12px 14px; margin:8px 0}
+.path{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0}
+.path .node{border:2px solid var(--ink); border-radius:4px; padding:4px 10px; background:#fadbe4}
+.path .node.root{background:var(--sun)}
+.path .sep{font-weight:700; color:var(--muted)}
+table.plan{width:100%; border-collapse:collapse; margin-top:8px}
+table.plan td{padding:8px 6px; border-top:1px solid var(--line); vertical-align:top}
+table.plan td:first-child{white-space:nowrap; font-weight:600; width:1%; padding-right:14px}
+ul.mis{margin:6px 0; padding-left:20px}
+footer{margin:40px 0 30px; font-size:.9rem; color:var(--muted); max-width:70ch}
+svg text{font-family:var(--sans)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (max-width:520px){body{font-size:16px} .q-text{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>&sum;</b>Gap Finder</div>
+    <div class="tag">Built for the CSC Back-to-School Hackathon</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- HOME -->
+<section id="home" class="view">
+  <h1>You are not bad at math. One older idea is missing.</h1>
+  <p class="lead">A student can understand 80% of a lesson, miss one core idea, and then watch every next lesson stack on top of that hole. Gap Finder asks a few short questions, follows the mistakes back through the topics that came before, and shows the exact idea to repair first.</p>
+
+  <div class="mapbox" aria-label="Map of how math topics depend on each other">
+    <div id="homeMap"></div>
+  </div>
+  <div class="legend">
+    <span class="l-none">Not checked yet</span>
+    <span class="l-ok">You know it</span>
+    <span class="l-bad">Shaky</span>
+    <span class="l-root">Where it started</span>
+  </div>
+
+  <h2>Which topic feels hard right now?</h2>
+  <div class="picks" id="picks"></div>
+  <div id="last"></div>
+
+  <h2>How it works</h2>
+  <div class="card">
+    <ol class="steps">
+      <li>Pick the topic that feels hard. You answer 2 short questions on it.</li>
+      <li>If you slip, the app checks the topics that topic is built on, one by one.</li>
+      <li>It stops at the earliest idea you missed, explains it, and gives you a 1-week review plan.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="view hidden" aria-live="polite">
+  <div class="card" style="margin-top:28px">
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    <div class="q-meta" id="qMeta"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="opts" id="opts"></div>
+    <div class="fb hidden" id="fb" role="status"></div>
+    <div class="row">
+      <button class="btn hidden" id="next">Next question</button>
+      <button class="btn alt" id="quit">Back to start</button>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="view hidden"></section>
+
+<footer>
+  Gap Finder is a proof of concept for math from negative numbers up to multi-step equations. Your answers stay in your browser (localStorage) and are never sent anywhere. Built with the help of AI tools, which are disclosed in the project README.
+</footer>
+</main>
+
+<script>
+/* ---------- Data: each topic, what it depends on, a mini-lesson, 2 check questions ---------- */
+const C = {
+  integers:{
+    name:"Negative numbers", pre:[],
+    lesson:"Picture a number line. Subtracting a number, or adding a negative one, moves you left. Two negatives multiplied make a positive; one negative and one positive make a negative.<br><b>Example:</b> &minus;3 &minus; 5: start at &minus;3, move 5 steps left, and you land on &minus;8.",
+    qs:[
+      {q:"What is \u22123 \u2212 5 ?", o:[
+        {t:"\u22128", ok:1},
+        {t:"\u22122", why:"You subtracted the sizes (5 \u2212 3) instead of moving further left."},
+        {t:"2", why:"You treated it like 5 \u2212 3 and lost both signs."},
+        {t:"8", why:"You dropped the negative sign on the 3."}]},
+      {q:"What is 7 + (\u221210) ?", o:[
+        {t:"\u22123", ok:1},
+        {t:"3", why:"You found the size of the gap but lost the sign of the bigger number."},
+        {t:"17", why:"You treated adding a negative as adding a positive."},
+        {t:"\u221217", why:"You added the sizes and kept a negative sign."}]}
+    ]},
+  fractions:{
+    name:"Fractions", pre:[],
+    lesson:"To add or subtract fractions, first give them the same bottom number (denominator). Change the tops to match, then add or subtract only the tops.<br><b>Example:</b> 1/2 + 1/3 becomes 3/6 + 2/6 = 5/6.",
+    qs:[
+      {q:"What is 1/2 + 1/3 ?", o:[
+        {t:"5/6", ok:1},
+        {t:"2/5", why:"You added the tops and the bottoms separately."},
+        {t:"2/6", why:"You found the common bottom (6) but did not change the tops."},
+        {t:"1/6", why:"You multiplied the fractions instead of adding them."}]},
+      {q:"What is 3/4 \u2212 1/8 ?", o:[
+        {t:"5/8", ok:1},
+        {t:"2/4", why:"You subtracted the tops and kept the bigger bottom without matching them."},
+        {t:"2/8", why:"You changed the bottom to 8 but did not change 3/4 into 6/8."},
+        {t:"7/8", why:"You added instead of subtracting."}]}
+    ]},
+  order:{
+    name:"Order of operations", pre:["integers"],
+    lesson:"Do brackets first, then powers, then multiplication and division, then addition and subtraction (BEDMAS / PEMDAS). Not simply left to right.<br><b>Example:</b> 3 + 4 &times; 2: do 4 &times; 2 = 8 first, then 3 + 8 = 11.",
+    qs:[
+      {q:"What is 3 + 4 \u00d7 2 ?", o:[
+        {t:"11", ok:1},
+        {t:"14", why:"You worked left to right instead of multiplying first."},
+        {t:"24", why:"You multiplied everything together."},
+        {t:"9", why:"You added everything together."}]},
+      {q:"What is (2 + 3)\u00b2 \u2212 4 ?", o:[
+        {t:"21", ok:1},
+        {t:"7", why:"You squared only the 3 instead of the whole bracket."},
+        {t:"6", why:"You doubled the bracket instead of squaring it."},
+        {t:"29", why:"You added the 4 instead of subtracting it."}]}
+    ]},
+  liketerms:{
+    name:"Like terms", pre:["integers"],
+    lesson:"Only combine terms that have the same letter part. Keep the sign in front of each term.<br><b>Example:</b> 4x + 3 &minus; x + 2 becomes (4x &minus; x) + (3 + 2) = 3x + 5.",
+    qs:[
+      {q:"Simplify: 3x + 5x \u2212 2x", o:[
+        {t:"6x", ok:1},
+        {t:"10x", why:"You ignored the minus sign in front of 2x."},
+        {t:"6x\u00b2", why:"You multiplied the x's instead of combining them."},
+        {t:"6", why:"You dropped the x."}]},
+      {q:"Simplify: 4x + 3 \u2212 x + 2", o:[
+        {t:"3x + 5", ok:1},
+        {t:"5x + 5", why:"You treated \u2212x as +x."},
+        {t:"3x + 1", why:"You subtracted the 2 instead of adding it."},
+        {t:"8x", why:"You mixed x-terms and plain numbers into one term."}]}
+    ]},
+  oneStep:{
+    name:"One-step equations", pre:["integers"],
+    lesson:"Undo the operation with its opposite, on both sides of the equals sign.<br><b>Example:</b> x + 7 = 3: subtract 7 from both sides, so x = &minus;4. And x/4 = 6: multiply both sides by 4, so x = 24.",
+    qs:[
+      {q:"Solve: x + 7 = 3", o:[
+        {t:"x = \u22124", ok:1},
+        {t:"x = 4", why:"You lost the negative sign."},
+        {t:"x = 10", why:"You added 7 instead of subtracting it."},
+        {t:"x = \u221210", why:"You added the numbers and kept a negative sign."}]},
+      {q:"Solve: x / 4 = 6", o:[
+        {t:"x = 24", ok:1},
+        {t:"x = 1.5", why:"You divided (6 \u00f7 4) instead of multiplying to undo the division."},
+        {t:"x = 2", why:"You subtracted instead of undoing the division."},
+        {t:"x = 10", why:"You added instead of undoing the division."}]}
+    ]},
+  twoStep:{
+    name:"Two-step equations", pre:["oneStep"],
+    lesson:"Undo in reverse order: first undo the adding or subtracting, then undo the multiplying or dividing.<br><b>Example:</b> 3x + 5 = 20. Subtract 5: 3x = 15. Divide by 3: x = 5.",
+    qs:[
+      {q:"Solve: 3x + 5 = 20", o:[
+        {t:"x = 5", ok:1},
+        {t:"x = 15", why:"You subtracted 5 but forgot to divide by 3."},
+        {t:"x = 25/3", why:"You added 5 instead of subtracting it."},
+        {t:"x = 5/3", why:"You divided 20 by 3 but did not divide the 5 as well."}]},
+      {q:"Solve: 2x \u2212 7 = 9", o:[
+        {t:"x = 8", ok:1},
+        {t:"x = 1", why:"You subtracted 7 from 9 instead of adding 7 to both sides."},
+        {t:"x = 16", why:"You added 7 but forgot to divide by 2."},
+        {t:"x = 4.5", why:"You ignored the \u22127 and only divided 9 by 2."}]}
+    ]},
+  target:{
+    name:"Multi-step equations", pre:["twoStep","fractions","liketerms","order"],
+    lesson:"Expand brackets, gather the x-terms on one side and the plain numbers on the other, then solve like a two-step equation.<br><b>Example:</b> 2(x + 3) = 14 becomes 2x + 6 = 14, then 2x = 8, so x = 4.",
+    qs:[
+      {q:"Solve: 2(x + 3) = 14", o:[
+        {t:"x = 4", ok:1},
+        {t:"x = 5.5", why:"You multiplied only the x by 2, not the 3 inside the bracket."},
+        {t:"x = 7", why:"You divided 14 by 2 and forgot the +3."},
+        {t:"x = 11", why:"You subtracted 3 but forgot to divide by 2."}]},
+      {q:"Solve: 3x + 4 = x + 12", o:[
+        {t:"x = 4", ok:1},
+        {t:"x = 8", why:"You moved the terms correctly but forgot to divide by 2."},
+        {t:"x = 2", why:"You added x to the left side instead of subtracting it."},
+        {t:"x = 8/3", why:"You ignored the x on the right side."}]}
+    ]}
+};
+
+/* Map layout: centre point of each topic on an 800 x 290 canvas */
+const POS = {
+  integers:[95,60], fractions:[95,245],
+  order:[305,28], liketerms:[305,108], oneStep:[305,188],
+  twoStep:[515,188], target:[715,108]
+};
+const NW = 156, NH = 44;
+
+/* The topics a student can start from */
+const PICKS = [
+  {id:"target",   title:"Multi-step equations", sub:"Brackets and x on both sides"},
+  {id:"twoStep",  title:"Two-step equations",   sub:"Like 3x + 5 = 20"},
+  {id:"liketerms",title:"Like terms",           sub:"Simplifying 4x + 3 \u2212 x + 2"}
+];
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const STORE = "gapfinder_v1";
+function show(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("hidden", v.id !== id));
+  window.scrollTo(0,0);
+}
+function shuffle(a){
+  a = a.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function depth(id){ return C[id].pre.length ? 1+Math.max(...C[id].pre.map(depth)) : 0; }
+function fmtDate(d){ return d.toLocaleDateString(undefined,{weekday:"short", month:"short", day:"numeric"}); }
+function save(obj){ try{ localStorage.setItem(STORE, JSON.stringify(obj)); }catch(e){} }
+function load(){ try{ return JSON.parse(localStorage.getItem(STORE)); }catch(e){ return null; } }
+
+/* ---------- Map drawing ---------- */
+function drawMap(results, roots){
+  results = results || {}; roots = roots || [];
+  let edges = "", nodes = "";
+  Object.keys(C).forEach(id=>{
+    C[id].pre.forEach(p=>{
+      const [x1,y1]=POS[p], [x2,y2]=POS[id];
+      const sx=x1+NW/2, ex=x2-NW/2, mx=(sx+ex)/2;
+      const bad = results[p] && !results[p].passed && results[id] && !results[id].passed;
+      edges += `<path d="M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}" fill="none" stroke="${bad?'#c92a5f':'#8fa1b8'}" stroke-width="${bad?3:2}" ${bad?'':'stroke-dasharray="5 4"'}/>`;
+    });
+  });
+  Object.keys(C).forEach(id=>{
+    const [cx,cy]=POS[id], r=results[id];
+    let fill="#f4f7fa", stroke="#8fa1b8", sw=2, tc="#12233d", tag="";
+    if(r && r.passed){ fill="#d6f0e1"; stroke="#1f8a5b"; }
+    if(r && !r.passed){ fill="#fadbe4"; stroke="#c92a5f"; }
+    if(roots.includes(id)){ fill="#f2b632"; stroke="#12233d"; sw=3.5; tag=`<text x="${cx}" y="${cy-NH/2-6}" text-anchor="middle" font-size="12" font-weight="700" fill="#12233d">start here</text>`; }
+    nodes += `${tag}<rect x="${cx-NW/2}" y="${cy-NH/2}" width="${NW}" height="${NH}" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>
+      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="600" fill="${tc}">${C[id].name}</text>`;
+  });
+  return `<svg viewBox="0 0 800 290" role="img" aria-label="Topic dependency map">${edges}${nodes}</svg>`;
+}
+
+/* ---------- Home ---------- */
+function renderHome(){
+  $("#homeMap").innerHTML = drawMap();
+  $("#picks").innerHTML = "";
+  PICKS.forEach(p=>{
+    const b = document.createElement("button");
+    b.className = "pick";
+    b.innerHTML = `<strong>${p.title}</strong><span>${p.sub}</span>`;
+    b.onclick = () => start(p.id);
+    $("#picks").appendChild(b);
+  });
+  const last = load(), box = $("#last");
+  box.innerHTML = "";
+  if(last && last.roots && last.roots.length){
+    const names = last.roots.map(r=>C[r].name).join(" and ");
+    const due = last.plan.find(s => new Date(s.date) >= startOfToday());
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<h3>Your last check</h3><p style="margin:4px 0 8px">The gap started at <b>${names}</b>. ${due ? `Next review: <b>${fmtDate(new Date(due.date))}</b>.` : "Your 1-week plan is finished. Check yourself again."}</p>`;
+    const b = document.createElement("button");
+    b.className = "btn alt"; b.textContent = "Re-check " + C[last.roots[0]].name;
+    b.onclick = () => start(last.roots[0]);
+    div.appendChild(b);
+    box.appendChild(div);
+  }
+}
+function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+
+/* ---------- Quiz engine ---------- */
+let S = null;
+function start(target){
+  S = {target, stack:[target], results:{}, cur:null, qi:0, n:0, locked:false, checked:0};
+  show("quiz");
+  nextNode();
+}
+function nextNode(){
+  if(!S.stack.length){ finish(); return; }
+  S.cur = S.stack.pop(); S.qi = 0; S.n = 0; S.checked++;
+  renderQ();
+}
+function renderQ(){
+  const c = C[S.cur], q = c.qs[S.qi];
+  $("#qMeta").textContent = `Checking ${c.name}, question ${S.qi+1} of 2`;
+  $("#qText").textContent = q.q;
+  const box = $("#opts"); box.innerHTML = "";
+  shuffle(q.o).forEach(o=>{
+    const b = document.createElement("button");
+    b.className = "opt"; b.textContent = o.t;
+    b.onclick = () => answer(o, b);
+    box.appendChild(b);
+  });
+  $("#fb").className = "fb hidden";
+  $("#next").classList.add("hidden");
+  S.locked = false;
+  $("#bar").style.width = Math.min(92, 8 + (S.checked-1)*22 + S.qi*10) + "%";
+}
+function answer(o, btn){
+  if(S.locked) return; S.locked = true;
+  const q = C[S.cur].qs[S.qi];
+  document.querySelectorAll(".opt").forEach(b=>{
+    b.disabled = true;
+    const match = q.o.find(x => x.t === b.textContent);
+    if(match && match.ok) b.classList.add("ok");
+  });
+  const fb = $("#fb");
+  if(o.ok){
+    S.n++; btn.classList.add("ok");
+    fb.className = "fb good"; fb.textContent = "Correct.";
+  } else {
+    btn.classList.add("bad");
+    fb.className = "fb wrong"; fb.textContent = "Not quite. " + o.why;
+    (S.miss = S.miss || []).push({node:S.cur, text:o.why, q:q.q});
+  }
+  const last = S.qi === 1;
+  $("#next").textContent = last ? "Continue" : "Next question";
+  $("#next").classList.remove("hidden");
+  $("#next").focus();
+}
+$("#next").onclick = () => {
+  if(S.qi === 0){ S.qi = 1; renderQ(); return; }
+  const passed = S.n === 2;
+  S.results[S.cur] = {passed};
+  if(!passed){
+    C[S.cur].pre.forEach(p=>{ if(!(p in S.results) && !S.stack.includes(p)) S.stack.push(p); });
+  }
+  nextNode();
+};
+$("#quit").onclick = () => { S = null; renderHome(); show("home"); };
+
+/* ---------- Result ---------- */
+function finish(){
+  const failed = Object.keys(S.results).filter(id => !S.results[id].passed);
+  const view = $("#result");
+  if(!failed.length){
+    view.innerHTML = `<div class="card found"><h2>No gap found in ${C[S.target].name}</h2>
+      <p>You answered both questions correctly. This topic looks solid, so try a harder one.</p>
+      <div class="mapbox">${drawMap(S.results)}</div>
+      <div class="row"><button class="btn" id="again">Check another topic</button></div></div>`;
+    show("result"); $("#again").onclick = () => { renderHome(); show("home"); };
+    return;
+  }
+  const roots = failed.filter(id => C[id].pre.every(p => S.results[p] && S.results[p].passed));
+  const order = failed.slice().sort((a,b)=>depth(a)-depth(b));
+  const today = startOfToday();
+  const offsets = [0,1,3,7];
+  const labels = [
+    "Read the mini-lesson, then redo the 2 checks.",
+    "Redo the 2 checks from memory, without looking.",
+    "Redo the checks, then try one new problem you make up yourself.",
+    `Re-test ${C[S.target].name}, the topic that felt hard.`
+  ];
+  const plan = offsets.map((o,i)=>{ const d=new Date(today); d.setDate(d.getDate()+o); return {date:d.toISOString(), label:labels[i]}; });
+  save({date:new Date().toISOString(), target:S.target, roots, plan});
+
+  const rootNames = roots.map(r=>`<span class="chip">${C[r].name}</span>`).join(" ");
+  const topSymptom = S.target !== roots[0]
+    ? `You came in stuck on <b>${C[S.target].name}</b>, but that is only the symptom.`
+    : `The trouble sits in <b>${C[S.target].name}</b> itself.`;
+  const pathHtml = order.map((id,i)=>`<span class="node ${roots.includes(id)?'root':''}">${C[id].name}</span>`).join('<span class="sep">then</span>');
+  const misses = (S.miss||[]).filter(m=>failed.includes(m.node));
+  const missHtml = misses.length ? `<ul class="mis">${misses.map(m=>`<li><b>${C[m.node].name}:</b> ${m.q}. ${m.text}</li>`).join("")}</ul>` : "";
+  const lessons = roots.map(r=>`<div class="lesson"><h3>${C[r].name}</h3>${C[r].lesson}
+      <div class="row"><button class="btn alt recheck" data-id="${r}">Re-check ${C[r].name}</button></div></div>`).join("");
+  const planRows = plan.map(p=>`<tr><td>${fmtDate(new Date(p.date))}</td><td>${p.label}</td></tr>`).join("");
+
+  view.innerHTML = `
+    <div class="card found" style="margin-top:28px">
+      <h2>Found it: the gap starts at ${rootNames}</h2>
+      <p style="margin:0">${topSymptom} Fixing the earlier idea first is what makes the later topic easier.</p>
+    </div>
+    <div class="mapbox">${drawMap(S.results, roots)}</div>
+    <div class="legend"><span class="l-ok">You know it</span><span class="l-bad">Shaky</span><span class="l-root">Where it started</span><span class="l-none">Not needed</span></div>
+
+    <h2>Your repair order</h2>
+    <div class="path">${pathHtml}</div>
+
+    <h2>What went wrong in your answers</h2>
+    ${missHtml || "<p>No specific slips were recorded.</p>"}
+
+    <h2>Fix the first brick</h2>
+    ${lessons}
+
+    <h2>Your 1-week plan</h2>
+    <div class="card"><table class="plan">${planRows}</table></div>
+
+    <div class="row"><button class="btn" id="again">Check another topic</button></div>`;
+  show("result");
+  $("#again").onclick = () => { renderHome(); show("home"); };
+  document.querySelectorAll(".recheck").forEach(b => b.onclick = () => start(b.dataset.id));
+}
+
+renderHome();
+</script>
+</body>
+</html>
