@@ -36,7 +36,7 @@ h3{font-family:var(--serif); font-size:1.15rem; margin:0 0 6px}
 .card{background:var(--card); border:2px solid var(--ink); border-radius:4px; box-shadow:5px 5px 0 var(--ink); padding:18px; margin:18px 0}
 .hidden{display:none !important}
 .mapbox{overflow-x:auto; background:var(--card); border:2px solid var(--ink); border-radius:4px; box-shadow:5px 5px 0 var(--ink); padding:10px}
-.mapbox svg{display:block; width:100%; min-width:600px; height:auto}
+.mapbox svg{display:block; width:100%; min-width:720px; height:auto}
 .legend{display:flex; gap:16px; flex-wrap:wrap; font-size:.88rem; color:var(--muted); margin:10px 2px 0}
 .legend span::before{content:""; display:inline-block; width:12px; height:12px; margin-right:6px; border:2px solid var(--ink); border-radius:2px; vertical-align:-1px}
 .legend .l-ok::before{background:#d6f0e1; border-color:var(--green)}
@@ -120,7 +120,7 @@ svg text{font-family:var(--sans)}
   <h2>How it works</h2>
   <div class="card">
     <ol class="steps">
-      <li>Pick the topic that feels hard. You answer 2 short questions on it.</li>
+      <li>Pick the topic that feels hard. You answer 2 to 3 short questions on it.</li>
       <li>If you slip, the app checks the topics that topic is built on, one by one.</li>
       <li>It stops at the earliest idea you missed, explains it, and gives you a 1-week review plan.</li>
     </ol>
@@ -146,30 +146,36 @@ svg text{font-family:var(--sans)}
 <section id="result" class="view hidden"></section>
 
 <footer>
-  Gap Finder is a proof of concept for math from negative numbers up to multi-step equations. Your answers stay in your browser (localStorage) and are never sent anywhere. Built with the help of AI tools, which are disclosed in the project README.
+  Gap Finder covers 16 middle-school math topics, from negative numbers up to multi-step equations, inequalities and percentages. Your answers stay in your browser (localStorage) and are never sent anywhere. Built with the help of AI tools, which are disclosed in the project README.
 </footer>
 </main>
 
 <script>
-/* ---------- Data: each topic, what it depends on, a mini-lesson, 2 check questions ---------- */
+/* ---------- Data: each topic, what it builds on, a mini-lesson, 3 check questions ---------- */
+/* o: options. ok:1 marks the right answer, why explains the slip behind a wrong one. */
 const C = {
   integers:{
-    name:"Negative numbers", pre:[],
-    lesson:"Picture a number line. Subtracting a number, or adding a negative one, moves you left. Two negatives multiplied make a positive; one negative and one positive make a negative.<br><b>Example:</b> &minus;3 &minus; 5: start at &minus;3, move 5 steps left, and you land on &minus;8.",
+    name:"Negative numbers", ex:"Like −3 − 5", pre:[],
+    lesson:"Picture a number line. Subtracting a number, or adding a negative one, moves you left. Two negatives multiplied make a positive; one negative and one positive make a negative.<br><b>Example:</b> −3 − 5: start at −3, move 5 steps left, and you land on −8.",
     qs:[
-      {q:"What is \u22123 \u2212 5 ?", o:[
-        {t:"\u22128", ok:1},
-        {t:"\u22122", why:"You subtracted the sizes (5 \u2212 3) instead of moving further left."},
-        {t:"2", why:"You treated it like 5 \u2212 3 and lost both signs."},
+      {q:"What is −3 − 5 ?", o:[
+        {t:"−8", ok:1},
+        {t:"−2", why:"You subtracted the sizes (5 − 3) instead of moving further left."},
+        {t:"2", why:"You treated it like 5 − 3 and lost both signs."},
         {t:"8", why:"You dropped the negative sign on the 3."}]},
-      {q:"What is 7 + (\u221210) ?", o:[
-        {t:"\u22123", ok:1},
+      {q:"What is 7 + (−10) ?", o:[
+        {t:"−3", ok:1},
         {t:"3", why:"You found the size of the gap but lost the sign of the bigger number."},
         {t:"17", why:"You treated adding a negative as adding a positive."},
-        {t:"\u221217", why:"You added the sizes and kept a negative sign."}]}
+        {t:"−17", why:"You added the sizes and kept a negative sign."}]},
+      {q:"What is (−4) × (−6) ?", o:[
+        {t:"24", ok:1},
+        {t:"−24", why:"Two negatives multiplied make a positive, not a negative."},
+        {t:"−10", why:"You added the numbers instead of multiplying."},
+        {t:"10", why:"You added the numbers instead of multiplying."}]}
     ]},
   fractions:{
-    name:"Fractions", pre:[],
+    name:"Adding fractions", ex:"Like 1/2 + 1/3", pre:[],
     lesson:"To add or subtract fractions, first give them the same bottom number (denominator). Change the tops to match, then add or subtract only the tops.<br><b>Example:</b> 1/2 + 1/3 becomes 3/6 + 2/6 = 5/6.",
     qs:[
       {q:"What is 1/2 + 1/3 ?", o:[
@@ -177,59 +183,199 @@ const C = {
         {t:"2/5", why:"You added the tops and the bottoms separately."},
         {t:"2/6", why:"You found the common bottom (6) but did not change the tops."},
         {t:"1/6", why:"You multiplied the fractions instead of adding them."}]},
-      {q:"What is 3/4 \u2212 1/8 ?", o:[
+      {q:"What is 3/4 − 1/8 ?", o:[
         {t:"5/8", ok:1},
-        {t:"2/4", why:"You subtracted the tops and kept the bigger bottom without matching them."},
+        {t:"2/4", why:"You subtracted the tops and kept a bottom without matching them."},
         {t:"2/8", why:"You changed the bottom to 8 but did not change 3/4 into 6/8."},
-        {t:"7/8", why:"You added instead of subtracting."}]}
+        {t:"7/8", why:"You added instead of subtracting."}]},
+      {q:"What is 2/3 + 1/6 ?", o:[
+        {t:"5/6", ok:1},
+        {t:"3/9", why:"You added the tops and the bottoms separately."},
+        {t:"3/6", why:"You matched the bottoms but did not change 2/3 into 4/6."},
+        {t:"1/9", why:"You multiplied the fractions instead of adding them."}]}
+    ]},
+  decimals:{
+    name:"Decimals", ex:"Like 0.5 + 0.25", pre:[],
+    lesson:"Line numbers up by the decimal point, not by the right-hand digit. Pad with zeros if it helps: 0.5 is the same as 0.50. To compare, compare place by place.<br><b>Example:</b> 0.5 + 0.25 = 0.50 + 0.25 = 0.75.",
+    qs:[
+      {q:"What is 0.5 + 0.25 ?", o:[
+        {t:"0.75", ok:1},
+        {t:"0.30", why:"You lined up digits from the right (5 + 25) instead of by the decimal point."},
+        {t:"0.525", why:"You joined the digits together instead of adding."},
+        {t:"7.5", why:"The decimal point ended up in the wrong place."}]},
+      {q:"Which is greater: 0.6 or 0.45 ?", o:[
+        {t:"0.6", ok:1},
+        {t:"0.45", why:"45 looks bigger than 6, but compare 0.60 with 0.45 place by place."},
+        {t:"They are equal", why:"They are different: 0.60 is more than 0.45."},
+        {t:"Cannot tell", why:"You can always compare them by writing both with two decimal places."}]},
+      {q:"What is 2.4 × 0.3 ?", o:[
+        {t:"0.72", ok:1},
+        {t:"7.2", why:"You multiplied the digits (24 × 3 = 72) but put the decimal point in the wrong place."},
+        {t:"0.072", why:"You moved the decimal point one place too far."},
+        {t:"2.7", why:"You added instead of multiplying."}]}
+    ]},
+  fracmult:{
+    name:"Multiply fractions", ex:"Like 2/3 × 3/4", pre:["fractions"],
+    lesson:"To multiply fractions, multiply the tops and multiply the bottoms. To divide, flip the second fraction and multiply.<br><b>Example:</b> 2/3 × 3/4 = 6/12 = 1/2. And 3/5 ÷ 3/10 = 3/5 × 10/3 = 2.",
+    qs:[
+      {q:"What is 2/3 × 3/4 ?", o:[
+        {t:"1/2", ok:1},
+        {t:"5/7", why:"You added the tops and the bottoms instead of multiplying."},
+        {t:"8/9", why:"You divided the fractions instead of multiplying them."},
+        {t:"6/7", why:"You multiplied the tops but added the bottoms."}]},
+      {q:"What is 3/5 ÷ 3/10 ?", o:[
+        {t:"2", ok:1},
+        {t:"1/2", why:"You flipped the wrong fraction. Flip the second one, then multiply."},
+        {t:"9/50", why:"You multiplied straight across instead of flipping the second fraction."},
+        {t:"1", why:"You divided the tops only."}]},
+      {q:"What is 4 × 2/5 ?", o:[
+        {t:"8/5", ok:1},
+        {t:"8/20", why:"You multiplied the bottom by 4 as well. Only the top changes."},
+        {t:"6/5", why:"You added 4 to the top instead of multiplying."},
+        {t:"4 2/5", why:"You wrote the 4 next to the fraction instead of multiplying."}]}
+    ]},
+  exponents:{
+    name:"Exponents", ex:"Like (−3)²", pre:["integers"],
+    lesson:"An exponent tells you how many times to multiply the base by itself. Brackets matter for signs. Anything to the power 0 is 1.<br><b>Example:</b> 2³ = 2 × 2 × 2 = 8. (−3)² = (−3) × (−3) = 9.",
+    qs:[
+      {q:"What is 2³ ?", o:[
+        {t:"8", ok:1},
+        {t:"6", why:"You multiplied 2 × 3 instead of using 2 three times."},
+        {t:"9", why:"You calculated 3² instead of 2³."},
+        {t:"5", why:"You added 2 + 3."}]},
+      {q:"What is (−3)² ?", o:[
+        {t:"9", ok:1},
+        {t:"−9", why:"With brackets, the negative sign is squared too: (−3) × (−3) = 9."},
+        {t:"6", why:"You multiplied 3 × 2 instead of squaring."},
+        {t:"−6", why:"You multiplied −3 × 2 instead of squaring."}]},
+      {q:"What is 5⁰ ?", o:[
+        {t:"1", ok:1},
+        {t:"0", why:"Any number (except 0) to the power 0 equals 1, not 0."},
+        {t:"5", why:"An exponent of 0 does not mean the number stays the same."},
+        {t:"50", why:"You wrote the digits side by side instead of using the exponent."}]}
+    ]},
+  oneStep:{
+    name:"One-step equations", ex:"Like x + 7 = 3", pre:["integers"],
+    lesson:"Undo the operation with its opposite, on both sides of the equals sign.<br><b>Example:</b> x + 7 = 3: subtract 7 from both sides, so x = −4. And x/4 = 6: multiply both sides by 4, so x = 24.",
+    qs:[
+      {q:"Solve: x + 7 = 3", o:[
+        {t:"x = −4", ok:1},
+        {t:"x = 4", why:"You lost the negative sign."},
+        {t:"x = 10", why:"You added 7 instead of subtracting it."},
+        {t:"x = −10", why:"You added the numbers and kept a negative sign."}]},
+      {q:"Solve: x / 4 = 6", o:[
+        {t:"x = 24", ok:1},
+        {t:"x = 1.5", why:"You divided (6 ÷ 4) instead of multiplying to undo the division."},
+        {t:"x = 2", why:"You subtracted instead of undoing the division."},
+        {t:"x = 10", why:"You added instead of undoing the division."}]},
+      {q:"Solve: 5x = −20", o:[
+        {t:"x = −4", ok:1},
+        {t:"x = 4", why:"You lost the negative sign when dividing."},
+        {t:"x = −15", why:"You added 5 instead of dividing by 5."},
+        {t:"x = −100", why:"You multiplied by 5 instead of dividing."}]}
+    ]},
+  liketerms:{
+    name:"Like terms", ex:"Like 4x + 3 − x + 2", pre:["integers"],
+    lesson:"Only combine terms that have the same letter part. Keep the sign in front of each term.<br><b>Example:</b> 4x + 3 − x + 2 becomes (4x − x) + (3 + 2) = 3x + 5.",
+    qs:[
+      {q:"Simplify: 3x + 5x − 2x", o:[
+        {t:"6x", ok:1},
+        {t:"10x", why:"You ignored the minus sign in front of 2x."},
+        {t:"6x²", why:"You multiplied the x's instead of combining them."},
+        {t:"6", why:"You dropped the x."}]},
+      {q:"Simplify: 4x + 3 − x + 2", o:[
+        {t:"3x + 5", ok:1},
+        {t:"5x + 5", why:"You treated −x as +x."},
+        {t:"3x + 1", why:"You subtracted the 2 instead of adding it."},
+        {t:"8x", why:"You mixed x-terms and plain numbers into one term."}]},
+      {q:"Simplify: 5a − 2b + 3a + b", o:[
+        {t:"8a − b", ok:1},
+        {t:"8a + b", why:"You lost the minus sign in front of 2b."},
+        {t:"6ab", why:"You combined a-terms and b-terms, which are different letters."},
+        {t:"8a − 3b", why:"You subtracted the last b instead of adding it."}]}
+    ]},
+  percent:{
+    name:"Percentages", ex:"Like 15% off $40", pre:["fractions","decimals"],
+    lesson:"Percent means 'out of 100'. To find a percent of a number, turn it into a decimal (25% = 0.25) and multiply. A discount is taken away from the price.<br><b>Example:</b> 25% of 80 = 0.25 × 80 = 20. A $40 shirt at 15% off costs 40 × 0.85 = $34.",
+    qs:[
+      {q:"What is 25% of 80 ?", o:[
+        {t:"20", ok:1},
+        {t:"2000", why:"You multiplied 25 × 80 and forgot to divide by 100."},
+        {t:"55", why:"You subtracted 25 from 80 instead of finding 25%."},
+        {t:"3.2", why:"You divided 80 by 25."}]},
+      {q:"A $40 shirt is 15% off. What is the sale price?", o:[
+        {t:"$34", ok:1},
+        {t:"$6", why:"That is the discount amount, not the price after it."},
+        {t:"$25", why:"You subtracted 15 dollars instead of 15 percent."},
+        {t:"$46", why:"You added the discount instead of subtracting it."}]},
+      {q:"30 is what percent of 120 ?", o:[
+        {t:"25%", ok:1},
+        {t:"400%", why:"You divided 120 by 30 instead of 30 by 120."},
+        {t:"30%", why:"You used the number 30 as the percent."},
+        {t:"90%", why:"You subtracted 120 − 30."}]}
+    ]},
+  ratio:{
+    name:"Ratios", ex:"Like 3 pens for $4.50", pre:["fracmult"],
+    lesson:"A ratio compares amounts. To scale it, multiply both parts by the same number. To simplify, divide both parts by their biggest shared factor.<br><b>Example:</b> 2 cups flour for 3 cups milk. For 9 cups milk, multiply both by 3: 6 cups flour. And 12:18 simplifies to 2:3.",
+    qs:[
+      {q:"A recipe uses 2 cups of flour for 3 cups of milk. How much flour goes with 9 cups of milk?", o:[
+        {t:"6 cups", ok:1},
+        {t:"8 cups", why:"You added 6 to the flour instead of multiplying both parts by 3."},
+        {t:"27 cups", why:"You multiplied 3 × 9 instead of scaling the ratio."},
+        {t:"4.5 cups", why:"You divided 9 by 2 instead of scaling the ratio."}]},
+      {q:"3 pens cost $4.50. How much do 5 pens cost?", o:[
+        {t:"$7.50", ok:1},
+        {t:"$6.50", why:"You added $2 for the 2 extra pens instead of finding the price of one pen."},
+        {t:"$2.70", why:"You flipped the proportion. More pens should cost more."},
+        {t:"$22.50", why:"You multiplied $4.50 × 5 instead of finding the price of one pen first."}]},
+      {q:"Simplify the ratio 12 : 18", o:[
+        {t:"2 : 3", ok:1},
+        {t:"6 : 9", why:"That is a step in the right direction, but it can be simplified further."},
+        {t:"3 : 2", why:"You reversed the ratio."},
+        {t:"4 : 6", why:"That is a step in the right direction, but it can be simplified further."}]}
     ]},
   order:{
-    name:"Order of operations", pre:["integers"],
-    lesson:"Do brackets first, then powers, then multiplication and division, then addition and subtraction (BEDMAS / PEMDAS). Not simply left to right.<br><b>Example:</b> 3 + 4 &times; 2: do 4 &times; 2 = 8 first, then 3 + 8 = 11.",
+    name:"Order of operations", ex:"Like 3 + 4 × 2", pre:["integers","exponents"],
+    lesson:"Do brackets first, then powers, then multiplication and division, then addition and subtraction (BEDMAS / PEMDAS). Not simply left to right.<br><b>Example:</b> 3 + 4 × 2: do 4 × 2 = 8 first, then 3 + 8 = 11.",
     qs:[
-      {q:"What is 3 + 4 \u00d7 2 ?", o:[
+      {q:"What is 3 + 4 × 2 ?", o:[
         {t:"11", ok:1},
         {t:"14", why:"You worked left to right instead of multiplying first."},
         {t:"24", why:"You multiplied everything together."},
         {t:"9", why:"You added everything together."}]},
-      {q:"What is (2 + 3)\u00b2 \u2212 4 ?", o:[
+      {q:"What is (2 + 3)² − 4 ?", o:[
         {t:"21", ok:1},
         {t:"7", why:"You squared only the 3 instead of the whole bracket."},
         {t:"6", why:"You doubled the bracket instead of squaring it."},
-        {t:"29", why:"You added the 4 instead of subtracting it."}]}
+        {t:"29", why:"You added the 4 instead of subtracting it."}]},
+      {q:"What is 20 − 4 × 3 + 2 ?", o:[
+        {t:"10", ok:1},
+        {t:"50", why:"You worked left to right instead of multiplying first."},
+        {t:"6", why:"You added the 2 before subtracting: 20 − (12 + 2)."},
+        {t:"0", why:"You added 3 + 2 first and then multiplied by 4."}]}
     ]},
-  liketerms:{
-    name:"Like terms", pre:["integers"],
-    lesson:"Only combine terms that have the same letter part. Keep the sign in front of each term.<br><b>Example:</b> 4x + 3 &minus; x + 2 becomes (4x &minus; x) + (3 + 2) = 3x + 5.",
+  distribute:{
+    name:"Distributive rule", ex:"Like 3(x + 4)", pre:["integers","liketerms"],
+    lesson:"A number outside a bracket multiplies every term inside. Watch the signs.<br><b>Example:</b> −2(x − 5) = (−2)(x) + (−2)(−5) = −2x + 10.",
     qs:[
-      {q:"Simplify: 3x + 5x \u2212 2x", o:[
-        {t:"6x", ok:1},
-        {t:"10x", why:"You ignored the minus sign in front of 2x."},
-        {t:"6x\u00b2", why:"You multiplied the x's instead of combining them."},
-        {t:"6", why:"You dropped the x."}]},
-      {q:"Simplify: 4x + 3 \u2212 x + 2", o:[
-        {t:"3x + 5", ok:1},
-        {t:"5x + 5", why:"You treated \u2212x as +x."},
-        {t:"3x + 1", why:"You subtracted the 2 instead of adding it."},
-        {t:"8x", why:"You mixed x-terms and plain numbers into one term."}]}
-    ]},
-  oneStep:{
-    name:"One-step equations", pre:["integers"],
-    lesson:"Undo the operation with its opposite, on both sides of the equals sign.<br><b>Example:</b> x + 7 = 3: subtract 7 from both sides, so x = &minus;4. And x/4 = 6: multiply both sides by 4, so x = 24.",
-    qs:[
-      {q:"Solve: x + 7 = 3", o:[
-        {t:"x = \u22124", ok:1},
-        {t:"x = 4", why:"You lost the negative sign."},
-        {t:"x = 10", why:"You added 7 instead of subtracting it."},
-        {t:"x = \u221210", why:"You added the numbers and kept a negative sign."}]},
-      {q:"Solve: x / 4 = 6", o:[
-        {t:"x = 24", ok:1},
-        {t:"x = 1.5", why:"You divided (6 \u00f7 4) instead of multiplying to undo the division."},
-        {t:"x = 2", why:"You subtracted instead of undoing the division."},
-        {t:"x = 10", why:"You added instead of undoing the division."}]}
+      {q:"Expand: 3(x + 4)", o:[
+        {t:"3x + 12", ok:1},
+        {t:"3x + 4", why:"You multiplied only the first term by 3."},
+        {t:"x + 12", why:"You multiplied only the second term by 3."},
+        {t:"3x + 7", why:"You added 3 to the 4 instead of multiplying."}]},
+      {q:"Expand: −2(x − 5)", o:[
+        {t:"−2x + 10", ok:1},
+        {t:"−2x − 10", why:"Two negatives multiplied make a positive: (−2)(−5) = +10."},
+        {t:"−2x − 5", why:"You multiplied only the first term."},
+        {t:"2x + 10", why:"You lost the negative sign on the 2x."}]},
+      {q:"Simplify: 3(x + 2) + 2(x − 5)", o:[
+        {t:"5x − 4", ok:1},
+        {t:"5x + 16", why:"You made 2 × (−5) positive instead of −10."},
+        {t:"5x − 3", why:"You multiplied only the x by 3 in the first bracket."},
+        {t:"5x + 4", why:"You flipped the sign of the final number."}]}
     ]},
   twoStep:{
-    name:"Two-step equations", pre:["oneStep"],
+    name:"Two-step equations", ex:"Like 3x + 5 = 20", pre:["oneStep"],
     lesson:"Undo in reverse order: first undo the adding or subtracting, then undo the multiplying or dividing.<br><b>Example:</b> 3x + 5 = 20. Subtract 5: 3x = 15. Divide by 3: x = 5.",
     qs:[
       {q:"Solve: 3x + 5 = 20", o:[
@@ -237,14 +383,79 @@ const C = {
         {t:"x = 15", why:"You subtracted 5 but forgot to divide by 3."},
         {t:"x = 25/3", why:"You added 5 instead of subtracting it."},
         {t:"x = 5/3", why:"You divided 20 by 3 but did not divide the 5 as well."}]},
-      {q:"Solve: 2x \u2212 7 = 9", o:[
+      {q:"Solve: 2x − 7 = 9", o:[
         {t:"x = 8", ok:1},
         {t:"x = 1", why:"You subtracted 7 from 9 instead of adding 7 to both sides."},
         {t:"x = 16", why:"You added 7 but forgot to divide by 2."},
-        {t:"x = 4.5", why:"You ignored the \u22127 and only divided 9 by 2."}]}
+        {t:"x = 4.5", why:"You ignored the −7 and only divided 9 by 2."}]},
+      {q:"Solve: x/3 + 2 = 7", o:[
+        {t:"x = 15", ok:1},
+        {t:"x = 5/3", why:"You divided by 3 instead of multiplying to undo the division."},
+        {t:"x = 27", why:"You added 2 instead of subtracting it, then multiplied by 3."},
+        {t:"x = 9", why:"You added 2 instead of subtracting it."}]}
+    ]},
+  evaluate:{
+    name:"Plugging in values", ex:"Like a² + 3a when a = −2", pre:["order"],
+    lesson:"Replace the letter with its value in brackets, then follow the order of operations.<br><b>Example:</b> If a = −2, then a² + 3a = (−2)² + 3(−2) = 4 + (−6) = −2.",
+    qs:[
+      {q:"If x = 3, what is 2x + 5 ?", o:[
+        {t:"11", ok:1},
+        {t:"10", why:"You added 2 + 3 + 5 instead of multiplying 2 × 3."},
+        {t:"16", why:"You added first (3 + 5) and then multiplied by 2."},
+        {t:"8", why:"You added 3 + 5 and ignored the 2."}]},
+      {q:"If a = −2, what is a² + 3a ?", o:[
+        {t:"−2", ok:1},
+        {t:"10", why:"You made 3a positive: 3 × (−2) = −6, not +6."},
+        {t:"−10", why:"You squared −2 to get −4 instead of +4."},
+        {t:"2", why:"You lost the sign when adding 4 + (−6)."}]},
+      {q:"If x = 4 and y = 5, what is 3x − y ?", o:[
+        {t:"7", ok:1},
+        {t:"17", why:"You added the y instead of subtracting it."},
+        {t:"−3", why:"You subtracted inside first: 3(x − y)."},
+        {t:"29", why:"You wrote 4 next to 3 (34) instead of multiplying."}]}
+    ]},
+  inequal:{
+    name:"Inequalities", ex:"Like −3x > 12", pre:["twoStep"],
+    lesson:"Solve an inequality like an equation, with one big difference: if you multiply or divide both sides by a negative number, flip the sign.<br><b>Example:</b> −3x > 12. Divide by −3 and flip: x < −4.",
+    qs:[
+      {q:"Solve: 2x + 3 < 11", o:[
+        {t:"x < 4", ok:1},
+        {t:"x > 4", why:"You flipped the sign, but you only flip when dividing by a negative."},
+        {t:"x < 8", why:"You subtracted 3 from 11 but forgot to divide by 2."},
+        {t:"x < 7", why:"You added 3 instead of subtracting it."}]},
+      {q:"Solve: −3x > 12", o:[
+        {t:"x < −4", ok:1},
+        {t:"x > −4", why:"You forgot to flip the sign when dividing by a negative."},
+        {t:"x > 4", why:"You lost the negative sign."},
+        {t:"x < 4", why:"You flipped the sign correctly but lost the negative on the 3."}]},
+      {q:"Which number is a solution of x − 5 ≥ 2 ?", o:[
+        {t:"7", ok:1},
+        {t:"6", why:"6 − 5 = 1, and 1 is not at least 2."},
+        {t:"2", why:"You compared x to 2 instead of solving for x first."},
+        {t:"−3", why:"−3 − 5 = −8, which is much less than 2."}]}
+    ]},
+  fracEq:{
+    name:"Fraction equations", ex:"Like (2/3)x = 8", pre:["twoStep","fracmult"],
+    lesson:"To undo multiplying by a fraction, multiply by its flip (reciprocal). To clear a division by a number, multiply both sides by that number.<br><b>Example:</b> (2/3)x = 8. Multiply both sides by 3/2: x = 8 × 3/2 = 12.",
+    qs:[
+      {q:"Solve: (2/3)x = 8", o:[
+        {t:"x = 12", ok:1},
+        {t:"x = 16/3", why:"You multiplied by 2/3 instead of by its flip, 3/2."},
+        {t:"x = 8/3", why:"You divided by 3 only and ignored the 2."},
+        {t:"x = 4", why:"You divided by 2 only and ignored the 3."}]},
+      {q:"Solve: x/4 + 3 = 5", o:[
+        {t:"x = 8", ok:1},
+        {t:"x = 1/2", why:"You divided by 4 instead of multiplying to undo the division."},
+        {t:"x = 32", why:"You added 3 instead of subtracting it, then multiplied by 4."},
+        {t:"x = 2", why:"You subtracted 3 correctly but forgot to multiply by 4."}]},
+      {q:"Solve: (x + 1)/3 = 4", o:[
+        {t:"x = 11", ok:1},
+        {t:"x = 12", why:"You multiplied by 3 but forgot to subtract the 1."},
+        {t:"x = 13", why:"You added 1 instead of subtracting it."},
+        {t:"x = 3", why:"You did 4 − 1 and ignored the division by 3."}]}
     ]},
   target:{
-    name:"Multi-step equations", pre:["twoStep","fractions","liketerms","order"],
+    name:"Multi-step equations", ex:"Brackets and x on both sides", pre:["twoStep","distribute","liketerms","fractions"],
     lesson:"Expand brackets, gather the x-terms on one side and the plain numbers on the other, then solve like a two-step equation.<br><b>Example:</b> 2(x + 3) = 14 becomes 2x + 6 = 14, then 2x = 8, so x = 4.",
     qs:[
       {q:"Solve: 2(x + 3) = 14", o:[
@@ -256,28 +467,19 @@ const C = {
         {t:"x = 4", ok:1},
         {t:"x = 8", why:"You moved the terms correctly but forgot to divide by 2."},
         {t:"x = 2", why:"You added x to the left side instead of subtracting it."},
-        {t:"x = 8/3", why:"You ignored the x on the right side."}]}
+        {t:"x = 8/3", why:"You ignored the x on the right side."}]},
+      {q:"Solve: 5(x − 2) = 3x + 4", o:[
+        {t:"x = 7", ok:1},
+        {t:"x = 3", why:"You multiplied only the x by 5, not the −2."},
+        {t:"x = −3", why:"You made 5 × (−2) positive."},
+        {t:"x = 14", why:"You got 2x = 14 but forgot to divide by 2."}]}
     ]}
 };
 
-/* Map layout: centre point of each topic on an 800 x 290 canvas */
-const POS = {
-  integers:[95,60], fractions:[95,245],
-  order:[305,28], liketerms:[305,108], oneStep:[305,188],
-  twoStep:[515,188], target:[715,108]
-};
-const NW = 156, NH = 44;
-
-/* The topics a student can start from */
-const PICKS = [
-  {id:"target",   title:"Multi-step equations", sub:"Brackets and x on both sides"},
-  {id:"twoStep",  title:"Two-step equations",   sub:"Like 3x + 5 = 20"},
-  {id:"liketerms",title:"Like terms",           sub:"Simplifying 4x + 3 \u2212 x + 2"}
-];
-
 /* ---------- Helpers ---------- */
 const $ = s => document.querySelector(s);
-const STORE = "gapfinder_v1";
+const STORE = "gapfinder_v2";
+const IDS = Object.keys(C);
 function show(id){
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("hidden", v.id !== id));
   window.scrollTo(0,0);
@@ -287,49 +489,63 @@ function shuffle(a){
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
-function depth(id){ return C[id].pre.length ? 1+Math.max(...C[id].pre.map(depth)) : 0; }
+const dcache = {};
+function depth(id){ return dcache[id] ??= (C[id].pre.length ? 1+Math.max(...C[id].pre.map(depth)) : 0); }
+function ancestors(id, out=new Set()){ C[id].pre.forEach(p=>{ out.add(p); ancestors(p,out); }); return out; }
+function dependents(id){ return IDS.filter(n => ancestors(n).has(id)); }
 function fmtDate(d){ return d.toLocaleDateString(undefined,{weekday:"short", month:"short", day:"numeric"}); }
+function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 function save(obj){ try{ localStorage.setItem(STORE, JSON.stringify(obj)); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem(STORE)); }catch(e){ return null; } }
 
-/* ---------- Map drawing ---------- */
+/* ---------- Map: auto-layout in columns by depth ---------- */
+const NW = 160, NH = 42, COLW = 200, ROWH = 62;
+const POS = {};
+(function layout(){
+  const cols = {};
+  IDS.forEach(id => (cols[depth(id)] = cols[depth(id)] || []).push(id));
+  Object.keys(cols).forEach(c => cols[c].forEach((id,r) => { POS[id] = [90 + c*COLW, 40 + r*ROWH]; }));
+})();
+const MAPW = 90 + (Math.max(...IDS.map(depth)))*COLW + NW/2 + 10;
+const MAPH = 40 + (Math.max(...Object.values(POS).map(p=>p[1])) - 40) + NH/2 + 26;
+
 function drawMap(results, roots){
   results = results || {}; roots = roots || [];
   let edges = "", nodes = "";
-  Object.keys(C).forEach(id=>{
+  IDS.forEach(id=>{
     C[id].pre.forEach(p=>{
       const [x1,y1]=POS[p], [x2,y2]=POS[id];
       const sx=x1+NW/2, ex=x2-NW/2, mx=(sx+ex)/2;
       const bad = results[p] && !results[p].passed && results[id] && !results[id].passed;
-      edges += `<path d="M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}" fill="none" stroke="${bad?'#c92a5f':'#8fa1b8'}" stroke-width="${bad?3:2}" ${bad?'':'stroke-dasharray="5 4"'}/>`;
+      edges += `<path d="M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}" fill="none" stroke="${bad?'#c92a5f':'#8fa1b8'}" stroke-width="${bad?3:1.6}" ${bad?'':'stroke-dasharray="5 4" opacity=".75"'}/>`;
     });
   });
-  Object.keys(C).forEach(id=>{
+  IDS.forEach(id=>{
     const [cx,cy]=POS[id], r=results[id];
-    let fill="#f4f7fa", stroke="#8fa1b8", sw=2, tc="#12233d", tag="";
+    let fill="#f4f7fa", stroke="#8fa1b8", sw=2, tag="";
     if(r && r.passed){ fill="#d6f0e1"; stroke="#1f8a5b"; }
     if(r && !r.passed){ fill="#fadbe4"; stroke="#c92a5f"; }
-    if(roots.includes(id)){ fill="#f2b632"; stroke="#12233d"; sw=3.5; tag=`<text x="${cx}" y="${cy-NH/2-6}" text-anchor="middle" font-size="12" font-weight="700" fill="#12233d">start here</text>`; }
+    if(roots.includes(id)){ fill="#f2b632"; stroke="#12233d"; sw=3.5; tag=`<text x="${cx}" y="${cy-NH/2-5}" text-anchor="middle" font-size="12" font-weight="700" fill="#12233d">start here</text>`; }
     nodes += `${tag}<rect x="${cx-NW/2}" y="${cy-NH/2}" width="${NW}" height="${NH}" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>
-      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="600" fill="${tc}">${C[id].name}</text>`;
+      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="13.5" font-weight="600" fill="#12233d">${C[id].name}</text>`;
   });
-  return `<svg viewBox="0 0 800 290" role="img" aria-label="Topic dependency map">${edges}${nodes}</svg>`;
+  return `<svg viewBox="0 0 ${MAPW} ${MAPH}" role="img" aria-label="Map of how the math topics build on each other">${edges}${nodes}</svg>`;
 }
 
 /* ---------- Home ---------- */
 function renderHome(){
   $("#homeMap").innerHTML = drawMap();
-  $("#picks").innerHTML = "";
-  PICKS.forEach(p=>{
+  const picks = $("#picks"); picks.innerHTML = "";
+  IDS.filter(id => C[id].pre.length).sort((a,b)=>depth(b)-depth(a)).forEach(id=>{
     const b = document.createElement("button");
     b.className = "pick";
-    b.innerHTML = `<strong>${p.title}</strong><span>${p.sub}</span>`;
-    b.onclick = () => start(p.id);
-    $("#picks").appendChild(b);
+    b.innerHTML = `<strong>${C[id].name}</strong><span>${C[id].ex}</span>`;
+    b.onclick = () => start(id);
+    picks.appendChild(b);
   });
   const last = load(), box = $("#last");
   box.innerHTML = "";
-  if(last && last.roots && last.roots.length){
+  if(last && last.roots && last.roots.length && last.roots.every(r=>C[r])){
     const names = last.roots.map(r=>C[r].name).join(" and ");
     const due = last.plan.find(s => new Date(s.date) >= startOfToday());
     const div = document.createElement("div");
@@ -342,23 +558,22 @@ function renderHome(){
     box.appendChild(div);
   }
 }
-function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 
-/* ---------- Quiz engine ---------- */
+/* ---------- Quiz engine: 2 questions, a 3rd only if they disagree ---------- */
 let S = null;
 function start(target){
-  S = {target, stack:[target], results:{}, cur:null, qi:0, n:0, locked:false, checked:0};
+  S = {target, stack:[target], results:{}, cur:null, qi:0, n:0, w:0, locked:false, checked:0, miss:[]};
   show("quiz");
   nextNode();
 }
 function nextNode(){
   if(!S.stack.length){ finish(); return; }
-  S.cur = S.stack.pop(); S.qi = 0; S.n = 0; S.checked++;
+  S.cur = S.stack.pop(); S.qi = 0; S.n = 0; S.w = 0; S.checked++;
   renderQ();
 }
 function renderQ(){
   const c = C[S.cur], q = c.qs[S.qi];
-  $("#qMeta").textContent = `Checking ${c.name}, question ${S.qi+1} of 2`;
+  $("#qMeta").textContent = `Checking ${c.name}, question ${S.qi+1}${S.qi===2 ? " (tie-breaker)" : ""}`;
   $("#qText").textContent = q.q;
   const box = $("#opts"); box.innerHTML = "";
   shuffle(q.o).forEach(o=>{
@@ -370,7 +585,7 @@ function renderQ(){
   $("#fb").className = "fb hidden";
   $("#next").classList.add("hidden");
   S.locked = false;
-  $("#bar").style.width = Math.min(92, 8 + (S.checked-1)*22 + S.qi*10) + "%";
+  $("#bar").style.width = Math.min(95, 6 + (S.checked-1)*20 + S.qi*8) + "%";
 }
 function answer(o, btn){
   if(S.locked) return; S.locked = true;
@@ -385,18 +600,18 @@ function answer(o, btn){
     S.n++; btn.classList.add("ok");
     fb.className = "fb good"; fb.textContent = "Correct.";
   } else {
-    btn.classList.add("bad");
+    S.w++; btn.classList.add("bad");
     fb.className = "fb wrong"; fb.textContent = "Not quite. " + o.why;
-    (S.miss = S.miss || []).push({node:S.cur, text:o.why, q:q.q});
+    S.miss.push({node:S.cur, text:o.why, q:q.q});
   }
-  const last = S.qi === 1;
-  $("#next").textContent = last ? "Continue" : "Next question";
+  const done = S.n >= 2 || S.w >= 2;
+  $("#next").textContent = done ? "Continue" : "Next question";
   $("#next").classList.remove("hidden");
   $("#next").focus();
 }
 $("#next").onclick = () => {
-  if(S.qi === 0){ S.qi = 1; renderQ(); return; }
-  const passed = S.n === 2;
+  if(S.n < 2 && S.w < 2){ S.qi++; renderQ(); return; }
+  const passed = S.n >= 2;
   S.results[S.cur] = {passed};
   if(!passed){
     C[S.cur].pre.forEach(p=>{ if(!(p in S.results) && !S.stack.includes(p)) S.stack.push(p); });
@@ -407,11 +622,12 @@ $("#quit").onclick = () => { S = null; renderHome(); show("home"); };
 
 /* ---------- Result ---------- */
 function finish(){
-  const failed = Object.keys(S.results).filter(id => !S.results[id].passed);
+  const checkedIds = Object.keys(S.results);
+  const failed = checkedIds.filter(id => !S.results[id].passed);
   const view = $("#result");
   if(!failed.length){
-    view.innerHTML = `<div class="card found"><h2>No gap found in ${C[S.target].name}</h2>
-      <p>You answered both questions correctly. This topic looks solid, so try a harder one.</p>
+    view.innerHTML = `<div class="card found" style="margin-top:28px"><h2>No gap found in ${C[S.target].name}</h2>
+      <p>You got this topic right. Try a harder one, or check a different topic that feels shaky.</p>
       <div class="mapbox">${drawMap(S.results)}</div>
       <div class="row"><button class="btn" id="again">Check another topic</button></div></div>`;
     show("result"); $("#again").onclick = () => { renderHome(); show("home"); };
@@ -420,34 +636,39 @@ function finish(){
   const roots = failed.filter(id => C[id].pre.every(p => S.results[p] && S.results[p].passed));
   const order = failed.slice().sort((a,b)=>depth(a)-depth(b));
   const today = startOfToday();
-  const offsets = [0,1,3,7];
   const labels = [
-    "Read the mini-lesson, then redo the 2 checks.",
-    "Redo the 2 checks from memory, without looking.",
+    "Read the mini-lesson, then redo the checks.",
+    "Redo the checks from memory, without looking.",
     "Redo the checks, then try one new problem you make up yourself.",
     `Re-test ${C[S.target].name}, the topic that felt hard.`
   ];
-  const plan = offsets.map((o,i)=>{ const d=new Date(today); d.setDate(d.getDate()+o); return {date:d.toISOString(), label:labels[i]}; });
+  const plan = [0,1,3,7].map((o,i)=>{ const d=new Date(today); d.setDate(d.getDate()+o); return {date:d.toISOString(), label:labels[i]}; });
   save({date:new Date().toISOString(), target:S.target, roots, plan});
 
   const rootNames = roots.map(r=>`<span class="chip">${C[r].name}</span>`).join(" ");
-  const topSymptom = S.target !== roots[0]
-    ? `You came in stuck on <b>${C[S.target].name}</b>, but that is only the symptom.`
-    : `The trouble sits in <b>${C[S.target].name}</b> itself.`;
-  const pathHtml = order.map((id,i)=>`<span class="node ${roots.includes(id)?'root':''}">${C[id].name}</span>`).join('<span class="sep">then</span>');
-  const misses = (S.miss||[]).filter(m=>failed.includes(m.node));
-  const missHtml = misses.length ? `<ul class="mis">${misses.map(m=>`<li><b>${C[m.node].name}:</b> ${m.q}. ${m.text}</li>`).join("")}</ul>` : "";
+  const symptom = roots.includes(S.target)
+    ? `The trouble sits in <b>${C[S.target].name}</b> itself.`
+    : `You came in stuck on <b>${C[S.target].name}</b>, but that is only the symptom.`;
+  const unlocks = [...new Set(roots.flatMap(dependents))].filter(id => !roots.includes(id));
+  const unlockHtml = unlocks.length
+    ? `<p style="margin:8px 0 0">Repairing it also helps with: ${unlocks.map(id=>`<b>${C[id].name}</b>`).join(", ")}.</p>` : "";
+  const pathHtml = order.map(id=>`<span class="node ${roots.includes(id)?'root':''}">${C[id].name}</span>`).join('<span class="sep">then</span>');
+  const misses = S.miss.filter(m=>failed.includes(m.node));
+  const missHtml = misses.length ? `<ul class="mis">${misses.map(m=>`<li><b>${C[m.node].name}:</b> ${m.q} ${m.text}</li>`).join("")}</ul>` : "";
   const lessons = roots.map(r=>`<div class="lesson"><h3>${C[r].name}</h3>${C[r].lesson}
       <div class="row"><button class="btn alt recheck" data-id="${r}">Re-check ${C[r].name}</button></div></div>`).join("");
   const planRows = plan.map(p=>`<tr><td>${fmtDate(new Date(p.date))}</td><td>${p.label}</td></tr>`).join("");
+  const solid = checkedIds.length - failed.length;
 
   view.innerHTML = `
     <div class="card found" style="margin-top:28px">
       <h2>Found it: the gap starts at ${rootNames}</h2>
-      <p style="margin:0">${topSymptom} Fixing the earlier idea first is what makes the later topic easier.</p>
+      <p style="margin:0">${symptom} Fixing the earlier idea first is what makes the later topic easier.</p>
+      ${unlockHtml}
     </div>
     <div class="mapbox">${drawMap(S.results, roots)}</div>
     <div class="legend"><span class="l-ok">You know it</span><span class="l-bad">Shaky</span><span class="l-root">Where it started</span><span class="l-none">Not needed</span></div>
+    <p style="margin:10px 0 0; color:var(--muted)">This check covered ${checkedIds.length} topics: ${solid} solid, ${failed.length} shaky.</p>
 
     <h2>Your repair order</h2>
     <div class="path">${pathHtml}</div>

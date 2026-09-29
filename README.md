@@ -13,7 +13,7 @@ Practice apps and quiz apps tell you which questions you got wrong. They do not 
 ## What Gap Finder does
 
 1. The student picks a topic that feels hard (for example, multi-step equations).
-2. The app asks 2 short questions on that topic.
+2. The app asks 2 short questions on that topic (a third only if the first two disagree, so one lucky guess or one careless slip does not decide the result).
 3. If the student slips, the app checks the topics that topic is built on, one at a time.
 4. It stops at the earliest idea the student missed (the "root cause").
 5. It shows a map of the topics, the exact mistakes made (for example, "you added instead of subtracting"), a short mini-lesson for the root cause, and a 1-week review plan with dates.
@@ -22,9 +22,11 @@ Every wrong answer is linked to a specific misconception, so the feedback explai
 
 ## How it works
 
-- Topics are stored as a **prerequisite graph**. Example: Multi-step equations depend on Two-step equations, Fractions, Like terms and Order of operations. Two-step equations depend on One-step equations, which depend on Negative numbers.
+- Topics are stored as a **prerequisite graph** of 16 topics. Example: Multi-step equations depend on Two-step equations, the Distributive rule, Like terms and Adding fractions. Two-step equations depend on One-step equations, which depend on Negative numbers.
+- The map is drawn automatically: each topic goes in a column by how many steps of prerequisites sit below it.
 - The diagnosis runs a depth-first search over the graph: a topic is only tested if a topic built on it was failed.
 - A failed topic whose prerequisites were all passed is marked as a **root cause**.
+- The result also lists every later topic that the root cause is holding back.
 - The review plan uses spaced repetition (today, +1 day, +3 days, +7 days) and is saved in the browser with `localStorage`.
 - No server, no account, no data collection. Everything runs in the browser.
 
@@ -48,5 +50,5 @@ Live version: see the link on the Devpost submission.
 
 ## Limits and next steps
 
-- Right now it covers math from negative numbers up to multi-step equations (7 topics, 14 questions).
+- Right now it covers 16 middle-school math topics (negative numbers, fractions, decimals, percentages, ratios, exponents, order of operations, like terms, the distributive rule, plugging in values, one-step, two-step, multi-step and fraction equations, and inequalities) with 48 questions.
 - Next: more topics and grade levels, more questions per topic, a teacher view that shows which idea a whole class is missing, and Arabic and other languages.
