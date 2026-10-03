@@ -209,11 +209,15 @@ assert(rc && rc.dataset.id === 'integers', 'Recheck button targets integers');
 console.log('\n=== TEST 7: Review plan ===');
 const tl = rv.querySelectorAll('.tl-item');
 assert(tl.length === 4, '4 plan items');
+const expectedRels = ['Today', 'Tomorrow', '3 days', 'Next week'];
 tl.forEach((t, i) => {
   const day = t.querySelector('.tl-d-day').textContent;
+  const rel = t.querySelector('.tl-d-rel').textContent;
   const label = t.querySelector('.tl-label').textContent;
   assert(day && label, `Plan ${i+1} has date and label`);
-  console.log(`  Plan ${i+1}: ${day} - ${label.substring(0,40)}...`);
+  assert(/^[A-Z][a-z]{2}, [A-Z][a-z]{2} \d{1,2}$/.test(day), `Plan ${i+1} date is strictly English format (e.g. "Sat, Oct 3"): "${day}"`);
+  assert(rel === expectedRels[i], `Plan ${i+1} rel is "${expectedRels[i]}": "${rel}"`);
+  console.log(`  Plan ${i+1}: ${day} (${rel}) - ${label.substring(0,40)}...`);
 });
 
 // ===== TEST 8: Timeline toggle =====
@@ -238,6 +242,9 @@ console.log('  Saved roots:', saved.roots.map(r => C[r].name));
 win.__goHome();
 assert(doc.querySelector('#welcomeBack .welcome-back') !== null, 'Welcome-back card on home');
 assert(doc.querySelector('#welcomeBack .welcome-back').textContent.includes('Negative numbers'), 'Welcome-back mentions root');
+const wbDate = doc.querySelector('#welcomeBack .wb-date');
+assert(wbDate !== null, 'Welcome-back has next review date');
+assert(/^[A-Z][a-z]{2}, [A-Z][a-z]{2} \d{1,2}$/.test(wbDate.textContent), 'Welcome-back next review date is English format: ' + wbDate.textContent);
 
 // Simulate refresh: new DOM, same store
 console.log('\n=== TEST 9b: Full page refresh ===');
@@ -381,6 +388,68 @@ recheckBtn.click();
 assert(getVisibleView(d2) === 'quiz', 'Recheck switches to quiz');
 assert(S2().target === recheckTarget, 'Recheck target matches button data-id');
 console.log('  Recheck started for:', C2[recheckTarget].name);
+
+// ===== TEST 14: Strict locale independence (Arabic environment simulation) =====
+console.log('\n=== TEST 14: Strict locale independence ===');
+const arabicStore = {};
+const makeArabicDOM = (h, sCode, storeObj) => {
+  const dom = new JSDOM(h, {
+    runScripts: 'outside-only',
+    pretendToBeVisual: true,
+    url: 'https://localhost/'
+  });
+  const win = dom.window;
+  const doc = win.document;
+  win.scrollTo = () => {};
+  win.HTMLElement.prototype.scrollIntoView = () => {};
+  win.HTMLButtonElement.prototype.click = function() {
+    if (this.onclick) this.onclick({ target: this, preventDefault() {} });
+  };
+  Object.defineProperty(win.navigator, 'language', { value: 'ar-SA' });
+  Object.defineProperty(win.navigator, 'languages', { value: ['ar-SA', 'ar'] });
+  // Mock toLocaleDateString to return Arabic if called anywhere
+  win.Date.prototype.toLocaleDateString = () => 'السبت، ٣ أكتوبر';
+  Object.defineProperty(win, 'localStorage', {
+    value: {
+      getItem: k => storeObj[k] ?? null,
+      setItem: (k, v) => { storeObj[k] = String(v); },
+      removeItem: k => { delete storeObj[k]; },
+      clear: () => { for (const k in storeObj) delete storeObj[k]; }
+    }
+  });
+  win.eval(sCode);
+  return { win, doc };
+};
+
+const arContext = makeArabicDOM(html, scriptCode, arabicStore);
+const arExpCard = Array.from(arContext.doc.querySelectorAll('#picks .topic-card'))
+  .find(b => b.getAttribute('aria-label') === 'Diagnose Exponents');
+arExpCard.click();
+const getArWrong = () => {
+  const s = arContext.win.__S();
+  const q = arContext.win.__C[s.cur].qs[s.qi];
+  const c = q.o.find(o => !o.ok); return c ? c.t : null;
+};
+const answerArWrong = (d) => {
+  const c = getArWrong();
+  clickOption(d, c);
+  d.querySelector('#next').click();
+};
+answerArWrong(arContext.doc);
+answerArWrong(arContext.doc);
+answerArWrong(arContext.doc);
+answerArWrong(arContext.doc);
+assert(getVisibleView(arContext.doc) === 'result', 'Result reached in Arabic env');
+
+const arPlanItems = arContext.doc.querySelectorAll('.tl-item');
+assert(arPlanItems.length === 4, '4 plan items in Arabic env');
+arPlanItems.forEach((t, i) => {
+  const day = t.querySelector('.tl-d-day').textContent;
+  const rel = t.querySelector('.tl-d-rel').textContent;
+  assert(/^[A-Z][a-z]{2}, [A-Z][a-z]{2} \d{1,2}$/.test(day), `Arabic env day ${i+1} is strictly English: "${day}"`);
+  assert(!/[\u0600-\u06FF]/.test(day), `Arabic env day ${i+1} has no Arabic chars`);
+  assert(!/[\u0600-\u06FF]/.test(rel), `Arabic env rel ${i+1} has no Arabic chars: "${rel}"`);
+});
 
 // ===== SUMMARY =====
 console.log('\n=== SUMMARY ===');

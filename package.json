@@ -1,5 +1,15 @@
 {
+  "name": "math-gap-finder",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Static app ready'",
+    "test": "node test-gapfinder.js && node test-e2e-live.js"
+  },
   "dependencies": {
+    "express": "^5.2.1",
     "jsdom": "^30.1.1"
   }
 }

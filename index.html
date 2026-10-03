@@ -1,10 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gap Finder — Find the math concept underneath the problem</title>
 <meta name="description" content="Gap Finder traces a math struggle back to the exact earlier concept a student missed, then builds a short plan to fix it.">
+<meta property="og:title" content="Gap Finder — Find the math concept underneath the problem">
+<meta property="og:description" content="Gap Finder traces a math struggle back to the exact earlier concept a student missed, then builds a short plan to fix it.">
+<meta name="google" content="notranslate">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -777,7 +783,13 @@ const dcache = {};
 function depth(id){ return dcache[id] ??= (C[id].pre.length ? 1+Math.max(...C[id].pre.map(depth)) : 0); }
 function ancestors(id, out=new Set()){ C[id].pre.forEach(p=>{ out.add(p); ancestors(p,out); }); return out; }
 function dependents(id){ return IDS.filter(n => ancestors(n).has(id)); }
-function fmtDate(d){ return d.toLocaleDateString(undefined,{weekday:"short", month:"short", day:"numeric"}); }
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function fmtDate(d){
+  const dateObj = (d instanceof Date) ? d : new Date(d);
+  if(isNaN(dateObj.getTime())) return "";
+  return `${DAYS[dateObj.getDay()]}, ${MONTHS[dateObj.getMonth()]} ${dateObj.getDate()}`;
+}
 function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 function save(obj){ try{ localStorage.setItem(STORE, JSON.stringify(obj)); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem(STORE)); }catch(e){ return null; } }
@@ -875,7 +887,7 @@ function renderHome(){
     const due = last.plan && last.plan.find(s => new Date(s.date) >= startOfToday());
     const div = document.createElement("div");
     div.className = "welcome-back fade-in";
-    div.innerHTML = `<div class="wb-info"><h3>Continue your repair</h3><p>The gap started at <b>${names}</b>. ${due ? `Next review: <span class="wb-date">${fmtDate(new Date(due.date))}</span>` : "Your 1-week plan is finished. Check yourself again."}</p></div>`;
+    div.innerHTML = `<div class="wb-info"><h3>Continue your repair</h3><p>The gap started at <b>${names}</b>. ${due ? `Next review: <span class="wb-date" translate="no">${fmtDate(new Date(due.date))}</span>` : "Your 1-week plan is finished. Check yourself again."}</p></div>`;
     const b = document.createElement("button");
     b.className = "btn btn-primary"; b.textContent = "Continue \u2192";
     b.onclick = () => start(last.roots[0]);
@@ -1022,7 +1034,7 @@ function finish(){
   </div>`).join("");
 
   const planRows = plan.map((p,i)=>`<div class="tl-item">
-    <div class="tl-date"><div class="tl-d-day">${fmtDate(new Date(p.date))}</div><div class="tl-d-rel">${relDate(p.date)}</div></div>
+    <div class="tl-date" translate="no"><div class="tl-d-day">${fmtDate(new Date(p.date))}</div><div class="tl-d-rel">${relDate(p.date)}</div></div>
     <div class="tl-body"><div class="tl-label">${p.label}</div></div>
     <button class="tl-check" data-idx="${i}" aria-label="Mark as done"></button>
   </div>`).join("");
@@ -1080,7 +1092,7 @@ function finish(){
           <h2>Your 1-week schedule</h2>
           <p>Spaced repetition: today, +1 day, +3 days, +7 days. Check off each step as you complete it.</p>
         </div>
-        <div class="card card-pad"><div class="timeline" id="timeline">${planRows}</div></div>
+        <div class="card card-pad"><div class="timeline" id="timeline" translate="no">${planRows}</div></div>
       </div>
 
       <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
