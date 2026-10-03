@@ -1255,6 +1255,7 @@ window.addEventListener("scroll", () => {
 
 /* KEYBOARD NAVIGATION */
 document.addEventListener("keydown", (e) => {
+  if(e.repeat) return;
   const quizEl = document.getElementById("quiz");
   if(quizEl && !quizEl.classList.contains("hidden")){
     if(["1","2","3","4"].includes(e.key)){
