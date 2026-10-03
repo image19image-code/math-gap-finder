@@ -13,100 +13,109 @@
 <meta http-equiv="Expires" content="0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0f1b33; --ink-2:#1e2d4a; --muted:#5d6b82; --muted-2:#8a96aa;
-  --line:#dde5f0; --line-2:#c5d1e3; --paper:#f4f7fb; --card:#ffffff;
-  --blue:#1c54d4; --blue-2:#2968e6; --blue-soft:#eaf1ff;
-  --green:#139a5f; --green-soft:#e2f7ee; --red:#d62056; --red-soft:#fce8ef;
-  --amber:#e89715; --amber-soft:#fff5e0; --amber-deep:#b8780c; --slate:#3a4a63;
-  --radius:10px; --radius-sm:6px; --radius-lg:16px;
-  --shadow-sm:0 1px 3px rgba(15,27,51,.08);
-  --shadow:0 2px 8px rgba(15,27,51,.08),0 1px 3px rgba(15,27,51,.06);
-  --shadow-lg:0 8px 28px rgba(15,27,51,.12);
+  --ink:#0b1528; --ink-2:#19273f; --slate:#384860; --muted:#556680; --muted-2:#8294ac;
+  --line:#dce4f0; --line-2:#c0cfdf; --paper:#f4f7fb; --card:#ffffff; --card-hover:#f9fbfe;
+  --blue:#1852d4; --blue-2:#2463eb; --blue-soft:#eaf1ff;
+  --green:#0f8a52; --green-soft:#e2f7ed; --red:#cf1c50; --red-soft:#fcebee;
+  --amber:#ea920c; --amber-soft:#fff5df; --amber-deep:#b26c04;
+  --radius-xs:4px; --radius-sm:8px; --radius:12px; --radius-lg:18px;
+  --shadow-sm:0 1px 3px rgba(11,21,40,.06),0 1px 2px rgba(11,21,40,.04);
+  --shadow:0 3px 10px rgba(11,21,40,.07),0 1px 3px rgba(11,21,40,.04);
+  --shadow-lg:0 12px 32px rgba(11,21,40,.1),0 2px 6px rgba(11,21,40,.05);
   --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --serif:"Newsreader",Georgia,"Times New Roman",serif;
-  --mono:"SF Mono","Cascadia Code","Fira Code",Consolas,monospace;
-  --maxw:920px;
+  --mono:"SF Mono","Cascadia Code","Fira Code",Consolas,Menlo,monospace;
+  --maxw:940px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{font-family:var(--sans);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.2;color:var(--ink)}
-h1{font-size:clamp(2rem,5vw,3.1rem);letter-spacing:-.02em;font-weight:700}
-h2{font-size:clamp(1.35rem,3vw,1.7rem);letter-spacing:-.01em}
-h3{font-size:1.18rem}
+h1{font-size:clamp(2.1rem,5vw,3.2rem);letter-spacing:-.025em;font-weight:700}
+h2{font-size:clamp(1.4rem,3vw,1.8rem);letter-spacing:-.015em}
+h3{font-size:1.22rem}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
 ::selection{background:var(--blue);color:#fff}
 .hidden{display:none!important}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+.skip-link{position:absolute;top:-40px;left:20px;background:var(--ink);color:#fff;padding:8px 16px;border-radius:4px;z-index:100;transition:top .2s}
+.skip-link:focus{top:12px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 
 /* HEADER */
-header.site{position:sticky;top:0;z-index:50;background:rgba(244,247,251,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:box-shadow .3s var(--ease),background .3s var(--ease)}
-header.site.scrolled{background:rgba(244,247,251,.95);box-shadow:var(--shadow-sm)}
-header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--ink);cursor:pointer;transition:opacity .2s}
-.brand:hover{opacity:.85}
-.brand .mark{display:grid;place-items:center;width:36px;height:36px;background:var(--ink);color:#fff;border-radius:8px;font-size:1.1rem;font-family:var(--serif);font-weight:700;transition:transform .3s var(--ease)}
-.brand:hover .mark{transform:rotate(-4deg) scale(1.05)}
+header.site{position:sticky;top:0;z-index:50;background:rgba(244,247,251,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:box-shadow .3s var(--ease),background .3s var(--ease)}
+header.site.scrolled{background:rgba(244,247,251,.98);box-shadow:var(--shadow-sm)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--ink);cursor:pointer;transition:opacity .2s;text-decoration:none}
+.brand:hover{opacity:.88}
+.brand .mark{display:grid;place-items:center;width:36px;height:36px;background:var(--ink);color:#fff;border-radius:9px;font-size:1.15rem;font-family:var(--serif);font-weight:700;box-shadow:var(--shadow-sm);transition:transform .3s var(--ease)}
+.brand:hover .mark{transform:rotate(-5deg) scale(1.06)}
+.brand .badge-tag{font-family:var(--sans);font-size:.72rem;font-weight:600;padding:2px 8px;background:var(--blue-soft);color:var(--blue);border-radius:12px;margin-left:4px}
 .nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .nav-links button{padding:8px 14px;font-size:.9rem;font-weight:500;color:var(--muted);border-radius:var(--radius-sm);transition:all .2s var(--ease)}
-.nav-links button:hover{color:var(--ink);background:rgba(15,27,51,.05)}
+.nav-links button:hover{color:var(--ink);background:rgba(11,21,40,.05)}
+.nav-links .pill-badge{font-size:.75rem;padding:4px 10px;background:var(--green-soft);color:var(--green);font-weight:600;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
 
 /* HERO */
-.hero{padding:clamp(32px,6vw,60px) 0 clamp(24px,4vw,40px)}
-.hero h1{max-width:18ch;margin-bottom:18px}
+.hero{padding:clamp(36px,6vw,68px) 0 clamp(24px,4vw,44px)}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.hero h1{max-width:20ch;margin-bottom:18px}
 .hero h1 .accent{color:var(--blue);position:relative;display:inline-block}
-.hero h1 .accent::after{content:"";position:absolute;left:-2px;right:-2px;bottom:4px;height:10px;background:var(--amber-soft);z-index:-1;border-radius:4px}
-.hero .lead{font-size:1.12rem;line-height:1.65;color:var(--slate);max-width:58ch;margin-bottom:28px}
-.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
-.trust-bar{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:8px 0}
-.trust-bar .dot{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.hero h1 .accent::after{content:"";position:absolute;left:-2px;right:-2px;bottom:4px;height:11px;background:var(--amber-soft);z-index:-1;border-radius:4px}
+.hero .lead{font-size:1.16rem;line-height:1.68;color:var(--slate);max-width:62ch;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+.trust-bar{display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:8px 0}
+.trust-bar .dot{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .trust-bar .dot::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;font-weight:600;font-size:.95rem;border-radius:var(--radius-sm);transition:all .18s var(--ease);white-space:nowrap}
-.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(28,84,212,.28)}
-.btn-primary:hover{background:var(--blue-2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(28,84,212,.35)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;font-weight:600;font-size:.95rem;border-radius:var(--radius-sm);transition:all .18s var(--ease);white-space:nowrap;min-height:44px}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(24,82,212,.28)}
+.btn-primary:hover{background:var(--blue-2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(24,82,212,.35)}
 .btn-primary:active{transform:translateY(0)}
-.btn-secondary{background:var(--card);color:var(--ink);border:1.5px solid var(--line-2)}
-.btn-secondary:hover{border-color:var(--ink);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-secondary{background:var(--card);color:var(--ink);border:1.5px solid var(--line-2);box-shadow:var(--shadow-sm)}
+.btn-secondary:hover{border-color:var(--ink);transform:translateY(-1px);background:var(--card-hover)}
 .btn-secondary:active{transform:translateY(0)}
 .btn-ghost{color:var(--muted);padding:8px 14px}
-.btn-ghost:hover{color:var(--ink);background:rgba(15,27,51,.04)}
-.btn-sm{padding:8px 16px;font-size:.85rem}
-.btn-lg{padding:15px 30px;font-size:1.02rem}
+.btn-ghost:hover{color:var(--ink);background:rgba(11,21,40,.05)}
+.btn-sm{padding:8px 16px;font-size:.85rem;min-height:36px}
+.btn-lg{padding:14px 28px;font-size:1.02rem}
 .btn .arrow{transition:transform .2s var(--ease)}
 .btn:hover .arrow{transform:translateX(3px)}
 .btn .arrow-d{transition:transform .2s var(--ease)}
 .btn:hover .arrow-d{transform:translateY(3px)}
 
 /* PROCESS FLOW */
+.flow-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:12px}
+.flow-card-head{font-size:.8rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .flow-strip{display:flex;align-items:stretch;gap:0;margin:0 auto;flex-wrap:nowrap;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch}
-.flow-step{flex:1 1 0;min-width:130px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:16px 8px}
-.flow-step .icon{width:46px;height:46px;display:grid;place-items:center;border-radius:12px;font-size:1.3rem;font-weight:700;font-family:var(--serif);margin-bottom:10px;transition:transform .3s var(--ease)}
+.flow-step{flex:1 1 0;min-width:125px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:12px 6px}
+.flow-step .icon{width:46px;height:46px;display:grid;place-items:center;border-radius:12px;font-size:1.25rem;font-weight:700;font-family:var(--serif);margin-bottom:10px;transition:transform .3s var(--ease);box-shadow:var(--shadow-sm)}
 .flow-step:hover .icon{transform:scale(1.08)}
-.flow-step .label{font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.3}
-.flow-step:not(:last-child)::after{content:"";position:absolute;right:-7px;top:32px;width:14px;height:2px;background:var(--line-2);flex-shrink:0}
+.flow-step .num{font-size:.7rem;font-weight:800;color:var(--muted-2);margin-bottom:2px;letter-spacing:.04em}
+.flow-step .label{font-size:.84rem;font-weight:600;color:var(--ink);line-height:1.3}
+.flow-step:not(:last-child)::after{content:"\2192";position:absolute;right:-6px;top:28px;font-size:1rem;color:var(--line-2);font-weight:700}
 .flow-step.s1 .icon{background:var(--blue-soft);color:var(--blue)}
 .flow-step.s2 .icon{background:var(--green-soft);color:var(--green)}
 .flow-step.s3 .icon{background:var(--red-soft);color:var(--red)}
 .flow-step.s4 .icon{background:var(--amber-soft);color:var(--amber-deep)}
 .flow-step.s5 .icon{background:var(--blue-soft);color:var(--blue)}
-@media(max-width:768px){.flow-step{min-width:110px}.flow-step .icon{width:40px;height:40px;font-size:1.1rem}.flow-step:not(:last-child)::after{right:-5px;width:10px}}
+.flow-step.s6 .icon{background:var(--green-soft);color:var(--green)}
+@media(max-width:768px){.flow-step{min-width:110px}.flow-step .icon{width:40px;height:40px;font-size:1.05rem}}
 
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
 .card-pad{padding:28px}
 
 /* MAP */
-.mapbox{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 8px 8px;-webkit-overflow-scrolling:touch;position:relative}
+.mapbox{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 10px 12px;-webkit-overflow-scrolling:touch;position:relative}
 .mapbox svg{display:block;width:100%;min-width:780px;height:auto;margin:0 auto}
-.map-hint{display:none;font-size:.78rem;color:var(--muted-2);text-align:center;padding:8px 0 4px}
+.map-hint{display:none;font-size:.8rem;color:var(--muted);text-align:center;padding:10px 0 4px}
 @media(max-width:768px){.map-hint{display:block}}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:14px 4px 4px}
 .legend .lg{display:inline-flex;align-items:center;gap:7px}
@@ -121,97 +130,117 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 /* SECTION HEADINGS */
 .section-head{margin-bottom:18px}
 .section-head .eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
-.section-head p{color:var(--muted);font-size:.98rem;max-width:55ch}
-.section-gap{margin-top:clamp(36px,5vw,56px)}
+.section-head p{color:var(--muted);font-size:1rem;max-width:58ch}
+.section-gap{margin-top:clamp(40px,5.5vw,64px)}
 
-/* TOPIC CARDS */
-.topics-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.topic-card{display:flex;flex-direction:column;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:all .2s var(--ease);position:relative;overflow:hidden}
-.topic-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+/* TOPIC FILTERS & GRID */
+.topic-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.topic-filter-btn{padding:6px 14px;font-size:.85rem;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:20px;transition:all .18s var(--ease)}
+.topic-filter-btn:hover{color:var(--ink);border-color:var(--line-2)}
+.topic-filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.topics-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.topic-card{display:flex;flex-direction:column;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:all .2s var(--ease);position:relative;overflow:hidden;min-height:130px}
+.topic-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-lg);background:var(--card-hover)}
 .topic-card:active{transform:translateY(0)}
 .topic-card .tc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-.topic-card .tc-name{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--ink)}
-.topic-card .tc-depth{font-size:.72rem;font-weight:600;color:var(--muted-2);padding:2px 8px;background:var(--paper);border-radius:20px;white-space:nowrap;flex-shrink:0}
-.topic-card .tc-ex{font-family:var(--mono);font-size:.9rem;color:var(--slate);background:var(--paper);padding:6px 10px;border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.topic-card .tc-status{font-size:.76rem;font-weight:600;margin-top:10px;display:inline-flex;align-items:center;gap:5px}
+.topic-card .tc-name{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--ink);line-height:1.25}
+.topic-card .tc-depth{font-size:.72rem;font-weight:700;color:var(--muted);padding:3px 9px;background:var(--paper);border:1px solid var(--line);border-radius:20px;white-space:nowrap;flex-shrink:0}
+.topic-card .tc-ex{font-family:var(--mono);font-size:.9rem;color:var(--slate);background:var(--paper);padding:6px 10px;border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid var(--line)}
+.topic-card .tc-status{font-size:.76rem;font-weight:600;margin-top:10px;display:inline-flex;align-items:center;gap:6px}
 .topic-card .tc-status.ok{color:var(--green)}
 .topic-card .tc-status.gap{color:var(--red)}
 .topic-card .tc-status.ok::before,.topic-card .tc-status.gap::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%}
 .topic-card .tc-status.ok::before{background:var(--green)}
 .topic-card .tc-status.gap::before{background:var(--red)}
-.topic-card::after{content:"\2192";position:absolute;right:16px;bottom:16px;font-size:1.1rem;color:var(--muted-2);opacity:0;transition:all .2s var(--ease);transform:translateX(-4px)}
+.topic-card::after{content:"\2192";position:absolute;right:16px;bottom:16px;font-size:1.2rem;color:var(--muted-2);opacity:0;transition:all .2s var(--ease);transform:translateX(-4px)}
 .topic-card:hover::after{opacity:1;transform:translateX(0);color:var(--blue)}
 
 /* WELCOME BACK */
-.welcome-back{background:linear-gradient(135deg,var(--amber-soft),#fff8e6);border:1.5px solid #f0d890;border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:8px}
-.welcome-back .wb-info h3{font-size:1.05rem;margin-bottom:2px}
-.welcome-back .wb-info p{font-size:.9rem;color:var(--slate)}
-.welcome-back .wb-info .wb-date{font-weight:600;color:var(--amber-deep)}
+.welcome-back{background:linear-gradient(135deg,var(--amber-soft),#fffbf2);border:1.5px solid #ebd38e;border-radius:var(--radius);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+.welcome-back .wb-info h3{font-size:1.15rem;margin-bottom:4px}
+.welcome-back .wb-info p{font-size:.94rem;color:var(--slate)}
+.welcome-back .wb-info .wb-date{font-weight:700;color:var(--amber-deep)}
 
 /* HOW IT WORKS */
 .how-list{list-style:none;counter-reset:step;display:grid;gap:0}
 .how-list li{counter-increment:step;position:relative;padding:18px 0 18px 52px;border-bottom:1px solid var(--line)}
 .how-list li:last-child{border-bottom:none}
 .how-list li::before{content:counter(step);position:absolute;left:0;top:18px;width:34px;height:34px;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--blue);background:var(--blue-soft);border-radius:50%}
-.how-list li strong{display:block;font-size:1rem;font-weight:600;margin-bottom:2px}
-.how-list li span{font-size:.92rem;color:var(--muted)}
+.how-list li strong{display:block;font-size:1.05rem;font-weight:600;margin-bottom:2px}
+.how-list li span{font-size:.94rem;color:var(--muted)}
 
 /* QUIZ */
-.quiz-container{padding:clamp(24px,4vw,40px) 0}
-.quiz-card{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:clamp(24px,4vw,38px);position:relative;overflow:hidden}
+.quiz-container{padding:clamp(24px,4vw,44px) 0}
+.quiz-card{max-width:660px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:clamp(24px,4.5vw,42px);position:relative;overflow:hidden}
 .quiz-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.quiz-topic-label{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:6px 14px;border-radius:20px}
+.quiz-topic-label{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:6px 14px;border-radius:20px}
 .quiz-topic-label .pulse{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.progress-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:6px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-2));border-radius:3px;width:0;transition:width .5s var(--ease-out)}
-.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--muted);margin-bottom:24px}
-.progress-meta .tie{color:var(--amber-deep);font-weight:600;background:var(--amber-soft);padding:2px 10px;border-radius:20px}
-.q-number-badge{font-size:.78rem;font-weight:700;color:var(--muted-2);margin-bottom:10px;letter-spacing:.05em}
-.q-text{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,1.85rem);line-height:1.35;color:var(--ink);margin-bottom:24px;min-height:1.4em}
-.opts{display:grid;gap:10px}
-.opt{text-align:left;background:var(--card);color:var(--ink);border:1.5px solid var(--line-2);border-radius:var(--radius-sm);padding:14px 18px;font-size:1.05rem;transition:all .18s var(--ease);display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px}
-.opt:hover:not(:disabled){border-color:var(--blue);background:var(--blue-soft);transform:translateX(2px)}
+.progress-track{height:7px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-2));border-radius:4px;width:0;transition:width .5s var(--ease-out)}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:24px}
+.progress-meta .tie{color:var(--amber-deep);font-weight:700;background:var(--amber-soft);padding:2px 10px;border-radius:20px}
+.q-number-badge{font-size:.78rem;font-weight:800;color:var(--muted-2);margin-bottom:12px;letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between}
+.q-keyboard-hint{font-size:.75rem;font-weight:500;color:var(--muted-2);font-family:var(--sans)}
+.q-text{font-family:var(--serif);font-size:clamp(1.45rem,3.8vw,1.95rem);line-height:1.35;color:var(--ink);margin-bottom:26px;min-height:1.4em}
+.opts{display:grid;gap:11px;counter-reset:opt-counter}
+.opt{counter-increment:opt-counter;text-align:left;background:var(--card);color:var(--ink);border:1.5px solid var(--line-2);border-radius:var(--radius-sm);padding:14px 18px;font-size:1.05rem;transition:all .18s var(--ease);display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px}
+.opt::before{content:counter(opt-counter);display:inline-grid;place-items:center;min-width:28px;height:28px;border-radius:6px;background:var(--paper);border:1px solid var(--line-2);font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--muted);margin-right:12px;flex-shrink:0;transition:all .18s var(--ease)}
+.opt:hover:not(:disabled)::before{background:var(--blue);color:#fff;border-color:var(--blue)}
+.opt:hover:not(:disabled){border-color:var(--blue);background:var(--blue-soft);transform:translateX(3px)}
 .opt:active:not(:disabled){transform:translateX(0) scale(.99)}
 .opt.ok{background:var(--green-soft);border-color:var(--green);color:var(--ink);font-weight:600}
+.opt.ok::before{background:var(--green);color:#fff;border-color:var(--green)}
 .opt.bad{background:var(--red-soft);border-color:var(--red);color:var(--ink)}
+.opt.bad::before{background:var(--red);color:#fff;border-color:var(--red)}
 .opt:disabled{cursor:default}
 .opt:disabled:not(.ok):not(.bad){opacity:.55}
-.opt .opt-mark{font-size:1.1rem;flex-shrink:0;width:24px;text-align:center}
-.opt.ok .opt-mark::before{content:"\2713";color:var(--green);font-weight:700}
-.opt.bad .opt-mark::before{content:"\2717";color:var(--red);font-weight:700}
+.opt .opt-mark{font-size:1.15rem;flex-shrink:0;width:24px;text-align:center}
+.opt.ok .opt-mark::before{content:"\2713";color:var(--green);font-weight:800}
+.opt.bad .opt-mark::before{content:"\2717";color:var(--red);font-weight:800}
 
 /* FEEDBACK */
 .feedback{margin-top:18px;padding:16px 20px;border-radius:var(--radius-sm);border-left:4px solid var(--blue);background:var(--blue-soft);font-size:.95rem;line-height:1.55;animation:slideIn .35s var(--ease-out)}
 .feedback.good{border-left-color:var(--green);background:var(--green-soft)}
 .feedback.wrong{border-left-color:var(--red);background:var(--red-soft)}
-.feedback .fb-title{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:block}
+.feedback .fb-title{font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;display:block}
 .feedback.good .fb-title{color:var(--green)}
 .feedback.wrong .fb-title{color:var(--red)}
 .feedback .fb-body{color:var(--slate)}
 @keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+.quiz-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
 .quiz-actions .spacer{flex:1}
 
-/* RESULT */
-.result-container{padding:clamp(24px,4vw,40px) 0 clamp(36px,5vw,56px)}
-.result-hero{background:linear-gradient(135deg,#fff8e6,var(--amber-soft));border:1.5px solid #f0d890;border-radius:var(--radius-lg);padding:clamp(24px,4vw,38px);margin-bottom:24px;text-align:center;position:relative;overflow:hidden}
-.result-hero::before{content:"";position:absolute;top:-40%;right:-10%;width:260px;height:260px;background:radial-gradient(circle,rgba(232,151,21,.12),transparent 70%);pointer-events:none}
-.rh-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:12px}
-.rh-eyebrow::before{content:"\2713";font-size:1rem}
-.result-hero h2{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:8px}
-.result-hero .root-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.root-chip{display:inline-flex;align-items:center;gap:6px;background:var(--amber);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:5px 14px;font-weight:700;font-size:1rem}
-.rh-sub{color:var(--slate);font-size:1rem;max-width:48ch;margin:0 auto}
-.result-hero .rh-unlock{margin-top:14px;font-size:.9rem;color:var(--muted);max-width:52ch;margin-left:auto;margin-right:auto}
+/* RESULT VIEW */
+.result-container{padding:clamp(24px,4vw,40px) 0 clamp(40px,6vw,64px)}
+.result-hero{background:linear-gradient(135deg,#fffbf2,var(--amber-soft));border:2px solid #ecd592;border-radius:var(--radius-lg);padding:clamp(28px,4.5vw,44px);margin-bottom:24px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.result-hero::before{content:"";position:absolute;top:-40%;right:-10%;width:280px;height:280px;background:radial-gradient(circle,rgba(234,146,12,.14),transparent 70%);pointer-events:none}
+.rh-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:12px}
+.rh-eyebrow::before{content:"\2713";font-size:1.05rem}
+.result-hero h2{font-size:clamp(1.6rem,3.8vw,2.2rem);margin-bottom:10px}
+.result-hero .root-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.root-chip{display:inline-flex;align-items:center;gap:6px;background:var(--amber);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:6px 16px;font-weight:800;font-size:1.05rem;box-shadow:0 2px 6px rgba(11,21,40,.12)}
+.rh-sub{color:var(--slate);font-size:1.05rem;max-width:52ch;margin:0 auto;line-height:1.6}
+.result-hero .rh-unlock{margin-top:16px;font-size:.92rem;color:var(--muted);max-width:54ch;margin-left:auto;margin-right:auto;background:rgba(255,255,255,.6);padding:8px 16px;border-radius:20px;border:1px solid rgba(234,146,12,.2)}
 .result-hero .rh-unlock b{color:var(--ink)}
-.result-no-gap{background:var(--green-soft);border:1.5px solid var(--green);border-radius:var(--radius-lg);padding:clamp(24px,4vw,38px);margin-bottom:24px;text-align:center}
+.result-no-gap{background:var(--green-soft);border:2px solid var(--green);border-radius:var(--radius-lg);padding:clamp(28px,4.5vw,44px);margin-bottom:24px;text-align:center;box-shadow:var(--shadow)}
+
+/* INVESTIGATION SUMMARY STEPPER */
+.journey-stepper{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin-bottom:22px;flex-wrap:wrap;box-shadow:var(--shadow-sm)}
+.js-item{display:flex;align-items:center;gap:10px;font-size:.85rem}
+.js-num{width:24px;height:24px;border-radius:50%;background:var(--paper);border:1px solid var(--line-2);display:grid;place-items:center;font-size:.74rem;font-weight:700;color:var(--muted);flex-shrink:0}
+.js-item.active .js-num{background:var(--amber);color:var(--ink);border-color:var(--ink)}
+.js-text{display:flex;flex-direction:column}
+.js-label{font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--muted-2);letter-spacing:.04em}
+.js-val{font-weight:700;color:var(--ink)}
+.js-sep{color:var(--line-2);font-weight:700}
+@media(max-width:768px){.journey-stepper{flex-direction:column;align-items:flex-start;gap:10px}.js-sep{display:none}}
 
 /* DIAG GRID */
 .diag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-.diag-cell{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;text-align:center}
-.diag-cell .dc-val{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);line-height:1}
-.diag-cell .dc-label{font-size:.78rem;font-weight:600;color:var(--muted);margin-top:4px;letter-spacing:.03em}
+.diag-cell{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px 18px;text-align:center;box-shadow:var(--shadow-sm)}
+.diag-cell .dc-val{font-family:var(--serif);font-size:1.75rem;font-weight:700;color:var(--ink);line-height:1}
+.diag-cell .dc-label{font-size:.78rem;font-weight:700;color:var(--muted);margin-top:5px;letter-spacing:.04em;text-transform:uppercase}
 .diag-cell.solid .dc-val{color:var(--green)}
 .diag-cell.shaky .dc-val{color:var(--red)}
 .diag-cell.root .dc-val{color:var(--amber-deep)}
@@ -220,65 +249,65 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 .trace-path{display:flex;flex-direction:column;gap:0;margin:16px 0}
 .trace-node{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius-sm);position:relative;transition:all .2s var(--ease)}
 .trace-node:hover{border-color:var(--line-2);box-shadow:var(--shadow-sm)}
-.trace-node.root{background:var(--amber-soft);border-color:var(--amber);border-width:2px}
+.trace-node.root{background:var(--amber-soft);border-color:var(--amber);border-width:2px;box-shadow:0 2px 8px rgba(234,146,12,.18)}
 .trace-node.target{background:var(--blue-soft);border-color:var(--blue);border-style:dashed}
-.trace-node .tn-icon{width:32px;height:32px;flex-shrink:0;display:grid;place-items:center;border-radius:8px;font-size:.85rem;font-weight:700;font-family:var(--serif)}
+.trace-node .tn-icon{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;border-radius:8px;font-size:.9rem;font-weight:800;font-family:var(--serif)}
 .trace-node.root .tn-icon{background:var(--amber);color:var(--ink)}
 .trace-node.shaky .tn-icon{background:var(--red-soft);color:var(--red)}
 .trace-node.solid .tn-icon{background:var(--green-soft);color:var(--green)}
 .trace-node.target .tn-icon{background:var(--blue);color:#fff}
-.trace-node .tn-name{font-weight:600;font-size:.95rem;color:var(--ink);flex:1}
-.trace-node .tn-tag{font-size:.76rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.trace-node .tn-name{font-weight:600;font-size:1rem;color:var(--ink);flex:1}
+.trace-node .tn-tag{font-size:.76rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .trace-node.root .tn-tag{color:var(--amber-deep)}
-.trace-connector{width:2px;height:18px;background:var(--line-2);margin-left:31px}
-.trace-connector.active{background:var(--amber)}
+.trace-connector{width:2px;height:18px;background:var(--line-2);margin-left:32px}
+.trace-connector.active{background:var(--amber);width:3px;margin-left:31.5px}
 
 /* MISCONCEPTIONS */
-.mislist{display:grid;gap:10px;margin-top:14px}
-.mis-item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:var(--radius-sm);padding:14px 18px}
-.mis-item .mis-topic{font-weight:700;font-size:.85rem;color:var(--red);margin-bottom:4px}
-.mis-item .mis-q{font-family:var(--mono);font-size:.85rem;color:var(--muted);margin-bottom:6px}
-.mis-item .mis-why{font-size:.92rem;color:var(--slate)}
+.mislist{display:grid;gap:12px;margin-top:14px}
+.mis-item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:var(--radius-sm);padding:16px 20px;box-shadow:var(--shadow-sm)}
+.mis-item .mis-topic{font-weight:800;font-size:.85rem;color:var(--red);margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
+.mis-item .mis-q{font-family:var(--mono);font-size:.9rem;color:var(--muted);margin-bottom:8px;background:var(--paper);padding:4px 8px;border-radius:4px;display:inline-block}
+.mis-item .mis-why{font-size:.95rem;color:var(--slate);line-height:1.55}
 
 /* LESSONS */
-.lesson-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:box-shadow .2s var(--ease)}
+.lesson-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:18px;transition:box-shadow .2s var(--ease);box-shadow:var(--shadow-sm)}
 .lesson-card:hover{box-shadow:var(--shadow)}
-.lesson-card .lc-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.lesson-card .lc-icon{width:40px;height:40px;flex-shrink:0;display:grid;place-items:center;background:var(--amber-soft);color:var(--amber-deep);border-radius:10px;font-size:1.2rem;font-family:var(--serif);font-weight:700}
-.lesson-card h3{font-size:1.2rem;flex:1}
-.lesson-card .lc-body{font-size:.95rem;line-height:1.65;color:var(--slate)}
+.lesson-card .lc-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.lesson-card .lc-icon{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;background:var(--amber-soft);color:var(--amber-deep);border-radius:10px;font-size:1.25rem;font-family:var(--serif);font-weight:700;border:1px solid rgba(234,146,12,.2)}
+.lesson-card h3{font-size:1.3rem;flex:1}
+.lesson-card .lc-body{font-size:.98rem;line-height:1.7;color:var(--slate)}
 .lesson-card .lc-body b{color:var(--ink)}
-.lesson-card .lc-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.lesson-card .lc-actions{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
 
 /* TIMELINE */
 .timeline{display:grid;gap:0;margin-top:16px}
 .tl-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}
 .tl-item:last-child{border-bottom:none}
-.tl-date{flex-shrink:0;width:110px;display:flex;flex-direction:column}
-.tl-date .tl-d-day{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--ink)}
-.tl-date .tl-d-rel{font-size:.76rem;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+.tl-date{flex-shrink:0;width:115px;display:flex;flex-direction:column}
+.tl-date .tl-d-day{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--ink)}
+.tl-date .tl-d-rel{font-size:.76rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em}
 .tl-body{flex:1}
-.tl-body .tl-label{font-size:.92rem;color:var(--slate);line-height:1.5}
-.tl-check{flex-shrink:0;width:28px;height:28px;border:2px solid var(--line-2);border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:all .2s var(--ease);background:var(--card)}
-.tl-check:hover{border-color:var(--green)}
+.tl-body .tl-label{font-size:.95rem;color:var(--slate);line-height:1.5}
+.tl-check{flex-shrink:0;width:30px;height:30px;border:2px solid var(--line-2);border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:all .2s var(--ease);background:var(--card)}
+.tl-check:hover{border-color:var(--green);transform:scale(1.08)}
 .tl-check.done{background:var(--green);border-color:var(--green);color:#fff}
-.tl-check.done::before{content:"\2713";font-weight:700;font-size:.85rem}
+.tl-check.done::before{content:"\2713";font-weight:800;font-size:.9rem}
 
 /* FOOTER */
-footer.site{margin-top:clamp(40px,6vw,64px);padding:28px 0 36px;border-top:1px solid var(--line);background:var(--card)}
-footer.site .wrap{display:flex;flex-direction:column;gap:14px}
-.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-footer.site p{font-size:.88rem;color:var(--muted);max-width:65ch}
-footer.site .footer-brand{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:600;font-size:1rem;color:var(--ink)}
-footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:center;background:var(--ink);color:#fff;border-radius:6px;font-size:.85rem}
+footer.site{margin-top:clamp(48px,7vw,72px);padding:32px 0 40px;border-top:1px solid var(--line);background:var(--card)}
+footer.site .wrap{display:flex;flex-direction:column;gap:16px}
+.footer-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:start}
+footer.site p{font-size:.9rem;color:var(--muted);max-width:65ch}
+footer.site .footer-brand{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:700;font-size:1.05rem;color:var(--ink)}
+footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:center;background:var(--ink);color:#fff;border-radius:6px;font-size:.9rem}
 @media(max-width:600px){.footer-grid{grid-template-columns:1fr}}
 
 /* ANIMATIONS */
-.fade-in{animation:fadeIn .5s var(--ease-out)}
-.fade-in-up{animation:fadeInUp .5s var(--ease-out)}
+.fade-in{animation:fadeIn .4s var(--ease-out)}
+.fade-in-up{animation:fadeInUp .45s var(--ease-out)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.stagger>*{animation:fadeInUp .45s var(--ease-out) backwards}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.stagger>*{animation:fadeInUp .4s var(--ease-out) backwards}
 .stagger>*:nth-child(1){animation-delay:.05s}
 .stagger>*:nth-child(2){animation-delay:.1s}
 .stagger>*:nth-child(3){animation-delay:.15s}
@@ -287,40 +316,44 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 .stagger>*:nth-child(6){animation-delay:.3s}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.pulse{animation:none}}
 
-/* RESPONSIVE */
+/* RESPONSIVE BREAKPOINTS (360px, 390px, 768px, 1280px) */
 @media(max-width:768px){
-  body{font-size:16px}.card{padding:18px}.card-pad{padding:20px}.quiz-card{padding:22px}
-  .hero h1{font-size:2rem}.hero .lead{font-size:1.05rem}
-  .opt{padding:12px 14px;font-size:1rem;min-height:48px}.q-text{font-size:1.35rem}
-  .result-hero{padding:24px}
-  .trace-node{padding:12px 14px;gap:10px}.trace-node .tn-icon{width:28px;height:28px;font-size:.75rem}
-  .trace-connector{margin-left:25px}
+  body{font-size:16px}.card{padding:20px}.card-pad{padding:20px}.quiz-card{padding:24px}
+  .hero h1{font-size:2.1rem}.hero .lead{font-size:1.08rem}
+  .opt{padding:12px 14px;font-size:1rem;min-height:50px}.q-text{font-size:1.4rem}
+  .result-hero{padding:26px 20px}
+  .trace-node{padding:12px 14px;gap:10px}.trace-node .tn-icon{width:30px;height:30px;font-size:.8rem}
+  .trace-connector{margin-left:27px}
   .diag-grid{grid-template-columns:repeat(2,1fr)}
   .nav-links{gap:2px}.nav-links button{padding:6px 10px;font-size:.85rem}
-  .brand{font-size:1.05rem}.brand .mark{width:32px;height:32px;font-size:1rem}
-  .tl-date{width:90px}.tl-check{width:32px;height:32px}
-  .topics-grid{grid-template-columns:1fr}.welcome-back{padding:16px 18px}
+  .brand{font-size:1.1rem}.brand .mark{width:32px;height:32px;font-size:1rem}
+  .tl-date{width:95px}.tl-check{width:32px;height:32px}
+  .topics-grid{grid-template-columns:1fr}.welcome-back{padding:18px 20px}
 }
 @media(max-width:400px){
-  body{font-size:15px}.wrap{padding:0 14px}
-  .hero{padding:24px 0 20px}.quiz-card{padding:18px}
-  .opt{padding:11px 12px;font-size:.95rem}.q-text{font-size:1.25rem}
-  .diag-grid{grid-template-columns:1fr 1fr;gap:8px}.diag-cell{padding:10px 12px}.diag-cell .dc-val{font-size:1.3rem}
+  body{font-size:15px}.wrap{padding:0 16px}
+  .hero{padding:26px 0 22px}.quiz-card{padding:18px}
+  .opt{padding:11px 12px;font-size:.96rem}.q-text{font-size:1.28rem}
+  .diag-grid{grid-template-columns:1fr 1fr;gap:8px}.diag-cell{padding:12px 10px}.diag-cell .dc-val{font-size:1.4rem}
 }
 </style>
 </head>
 <body>
 
+<a href="#home" class="skip-link sr-only">Skip to main content</a>
+
 <header class="site" id="siteHeader">
   <div class="wrap">
     <div class="brand" onclick="goHome()" role="button" tabindex="0" aria-label="Gap Finder home">
-      <span class="mark">&sum;</span>Gap Finder
+      <span class="mark" aria-hidden="true">&sum;</span>Gap Finder
+      <span class="badge-tag">Pre-Algebra &amp; Middle School</span>
     </div>
-    <nav class="nav-links" aria-label="Navigation">
+    <nav class="nav-links" aria-label="Main Navigation">
       <button onclick="goHome()">Home</button>
-      <button onclick="scrollToTopics()">Diagnose</button>
+      <button onclick="scrollToTopics()">Diagnose Topic</button>
       <button onclick="scrollToHow()">How It Works</button>
-      <button onclick="scrollToPrivacy()">Privacy</button>
+      <button onclick="scrollToPrivacy()">Privacy &amp; Offline</button>
+      <span class="pill-badge" title="No backend required — runs offline in browser"><span style="width:6px;height:6px;border-radius:50%;background:var(--green)"></span>Offline Ready</span>
     </nav>
   </div>
 </header>
@@ -329,26 +362,30 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 <section id="home" class="view">
   <div class="wrap">
     <div class="hero">
+      <div class="hero-tag">Root-Cause Mathematics Diagnostic</div>
       <h1>Find the math concept <span class="accent">underneath</span> the problem.</h1>
-      <p class="lead">You may not be struggling with the topic itself. Gap Finder traces your answers backward through the concepts that came before to find the earlier idea that needs repair.</p>
+      <p class="lead">A student may be struggling with a topic because an earlier concept is missing. Gap Finder investigates your answers backward through the prerequisite graph to pinpoint the exact root gap—then builds a short, focused plan to fix it.</p>
       <div class="hero-ctas">
         <button class="btn btn-primary btn-lg" onclick="scrollToTopics()">Find My Gap <span class="arrow">&rarr;</span></button>
         <button class="btn btn-secondary btn-lg" onclick="scrollToHow()">How It Works <span class="arrow-d">&darr;</span></button>
       </div>
       <div class="trust-bar">
-        <span class="dot">No account</span>
-        <span class="dot">No server</span>
-        <span class="dot">Your progress stays in this browser</span>
+        <span class="dot">Private by design</span>
+        <span class="dot">Zero accounts or tracking</span>
+        <span class="dot">16-topic prerequisite graph</span>
+        <span class="dot">Runs offline in your browser</span>
       </div>
     </div>
 
-    <div class="card card-pad" style="margin-bottom:8px">
+    <div class="flow-card">
+      <div class="flow-card-head">The Gap Finder Methodology</div>
       <div class="flow-strip" role="list">
-        <div class="flow-step s1" role="listitem"><div class="icon">?</div><div class="label">Choose a<br>problem topic</div></div>
-        <div class="flow-step s2" role="listitem"><div class="icon">&check;</div><div class="label">Check<br>prerequisites</div></div>
-        <div class="flow-step s3" role="listitem"><div class="icon">&times;</div><div class="label">Trace<br>the gap</div></div>
-        <div class="flow-step s4" role="listitem"><div class="icon">&sum;</div><div class="label">Repair the<br>root concept</div></div>
-        <div class="flow-step s5" role="listitem"><div class="icon">&rarr;</div><div class="label">Recheck<br>and continue</div></div>
+        <div class="flow-step s1" role="listitem"><div class="icon">1</div><div class="num">STEP 1</div><div class="label">Choose a<br>hard topic</div></div>
+        <div class="flow-step s2" role="listitem"><div class="icon">2</div><div class="num">STEP 2</div><div class="label">Diagnose<br>with checks</div></div>
+        <div class="flow-step s3" role="listitem"><div class="icon">3</div><div class="num">STEP 3</div><div class="label">Trace back<br>prerequisites</div></div>
+        <div class="flow-step s4" role="listitem"><div class="icon">4</div><div class="num">STEP 4</div><div class="label">Find the<br>root gap</div></div>
+        <div class="flow-step s5" role="listitem"><div class="icon">5</div><div class="num">STEP 5</div><div class="label">Repair with<br>mini-lesson</div></div>
+        <div class="flow-step s6" role="listitem"><div class="icon">6</div><div class="num">STEP 6</div><div class="label">Recheck<br>&amp; retain</div></div>
       </div>
     </div>
 
@@ -356,43 +393,49 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 
     <div class="section-gap">
       <div class="section-head">
-        <span class="eyebrow">The Map</span>
+        <span class="eyebrow">The Prerequisite Graph</span>
         <h2>How math topics build on each other</h2>
-        <p>Each box is a concept. Arrows show what it depends on. Gap Finder walks this map backward to find where the gap starts.</p>
+        <p>Each box represents a concept. Arrows show foundational prerequisites. When a lesson feels difficult, Gap Finder traverses this map backward to identify where understanding first slipped.</p>
       </div>
       <div class="mapbox" aria-label="Map of how math topics depend on each other">
         <div id="homeMap"></div>
       </div>
-      <p class="map-hint">Scroll horizontally to see the full map &rarr;</p>
+      <p class="map-hint">Scroll horizontally to view all connected concept levels &rarr;</p>
       <div class="legend">
         <span class="lg unchecked"><span class="sw"></span>Not checked</span>
-        <span class="lg known"><span class="sw"></span>Known</span>
+        <span class="lg known"><span class="sw"></span>Known (Solid)</span>
         <span class="lg shaky"><span class="sw"></span>Shaky</span>
-        <span class="lg root"><span class="sw"></span>Root gap</span>
-        <span class="lg target"><span class="sw"></span>Current topic</span>
+        <span class="lg root"><span class="sw"></span>Root Gap (Start Here)</span>
+        <span class="lg target"><span class="sw"></span>Current Topic</span>
       </div>
     </div>
 
     <div class="section-gap" id="topicsSection">
       <div class="section-head">
-        <span class="eyebrow">Diagnose</span>
+        <span class="eyebrow">Select a Topic to Diagnose</span>
         <h2>What feels hardest right now?</h2>
-        <p>Pick the topic you want to understand better. Gap Finder will ask 2&ndash;3 short questions, then trace backward if something slips.</p>
+        <p>Select any concept you want to master. We ask 2&ndash;3 quick diagnostic questions. If something slips, we investigate the underlying ideas until the root cause is clear.</p>
+      </div>
+      <div class="topic-filters" role="tablist" aria-label="Filter topics by category">
+        <button class="topic-filter-btn active" onclick="filterTopics('all', this)" role="tab" aria-selected="true">All Topics (16)</button>
+        <button class="topic-filter-btn" onclick="filterTopics('equations', this)" role="tab" aria-selected="false">Equations &amp; Solving</button>
+        <button class="topic-filter-btn" onclick="filterTopics('expressions', this)" role="tab" aria-selected="false">Expressions &amp; Rules</button>
+        <button class="topic-filter-btn" onclick="filterTopics('foundations', this)" role="tab" aria-selected="false">Arithmetic &amp; Powers</button>
       </div>
       <div class="topics-grid" id="picks"></div>
     </div>
 
     <div class="section-gap" id="howSection">
       <div class="section-head">
-        <span class="eyebrow">Method</span>
-        <h2>How it works</h2>
+        <span class="eyebrow">The Core Method</span>
+        <h2>Why standard math practice doesn't fix gaps</h2>
       </div>
       <div class="card card-pad">
         <ol class="how-list">
-          <li><strong>Pick the topic that feels hard.</strong><span>You answer 2 to 3 short questions on it. A third question only appears if the first two disagree.</span></li>
-          <li><strong>If you slip, the app checks prerequisites.</strong><span>It walks backward through the topics that came before, one at a time, asking the same 2&ndash;3 checks.</span></li>
-          <li><strong>It finds the root gap.</strong><span>It stops at the earliest idea you missed &mdash; the real cause &mdash; and marks everything above it that depends on that idea.</span></li>
-          <li><strong>You get a mini-lesson and a plan.</strong><span>A short lesson for the root concept, your exact mistakes explained, and a 1-week review schedule with dates.</span></li>
+          <li><strong>Pick the topic that feels hard.</strong><span>You answer 2 to 3 short diagnostic checks. A third question appears only if the first two disagree, preventing careless slips from deciding the outcome.</span></li>
+          <li><strong>If you slip, Gap Finder checks the earlier foundation.</strong><span>Instead of simply drilling you on the same hard problem, the app steps backward along prerequisite branches to test the underlying rules.</span></li>
+          <li><strong>It stops at the root cause.</strong><span>A failed concept whose own prerequisites are all secure is marked as the root cause. Everything built on top of it unlocks once this gap is repaired.</span></li>
+          <li><strong>You get a focused lesson and a 1-week plan.</strong><span>A targeted mini-lesson explains the exact misconception, followed by an actionable spaced repetition schedule with calendar dates.</span></li>
         </ol>
       </div>
     </div>
@@ -404,14 +447,17 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
     <div class="quiz-card">
       <div class="quiz-header">
         <div class="quiz-topic-label"><span class="pulse"></span><span id="qMeta">Checking&hellip;</span></div>
-        <button class="btn btn-ghost btn-sm" id="quit">&larr; Back to start</button>
+        <button class="btn btn-ghost btn-sm" id="quit">&larr; Back to topics</button>
       </div>
       <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="bar"></div></div>
       <div class="progress-meta">
         <span id="qProgressLabel">Question 1</span>
-        <span id="qTieBreak" class="tie hidden">Tie-breaker</span>
+        <span id="qTieBreak" class="tie hidden">Tie-breaker Check</span>
       </div>
-      <div class="q-number-badge" id="qNumberBadge">DIAGNOSTIC CHECK</div>
+      <div class="q-number-badge" id="qNumberBadge">
+        <span>DIAGNOSTIC CHECK</span>
+        <span class="q-keyboard-hint">Press 1&ndash;4 or click</span>
+      </div>
       <div class="q-text" id="qText"></div>
       <div class="opts" id="opts"></div>
       <div class="feedback hidden" id="fb" role="status"></div>
@@ -430,12 +476,12 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand"><span class="mark">&sum;</span>Gap Finder</div>
-        <p style="margin-top:8px">Covers 16 middle-school math topics, from negative numbers up to multi-step equations, inequalities and percentages. Your answers stay in your browser and are never sent anywhere.</p>
+        <div class="footer-brand"><span class="mark" aria-hidden="true">&sum;</span>Gap Finder</div>
+        <p style="margin-top:8px">Covers 16 core middle-school and pre-algebra math topics—from negative numbers and fractions to multi-step equations and inequalities. Built to help students see that being stuck isn't about being bad at math; it's about finding one earlier idea.</p>
       </div>
       <div>
-        <p style="font-weight:600;color:var(--ink)">Private by design</p>
-        <p style="margin-top:4px">No account. No server. No upload. Your progress is saved with localStorage and never leaves this browser. Built with the help of AI tools, disclosed in the project README.</p>
+        <p style="font-weight:700;color:var(--ink)">Private by design · No backend required</p>
+        <p style="margin-top:6px">No accounts, no telemetry, no tracking cookies, and no data collection. Your progress is saved safely in your browser via localStorage and never leaves your device.</p>
       </div>
     </div>
   </div>
@@ -445,7 +491,7 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 /* DATA: topics, prerequisites, lessons, questions — PRESERVED EXACTLY */
 const C = {
   integers:{
-    name:"Negative numbers", ex:"\u22123 \u2212 5", pre:[],
+    name:"Negative numbers", ex:"\u22123 \u2212 5", pre:[], category:"foundations",
     lesson:"Picture a number line. Subtracting a number, or adding a negative one, moves you left. Two negatives multiplied make a positive; one negative and one positive make a negative.<br><b>Example:</b> \u22123 \u2212 5: start at \u22123, move 5 steps left, and you land on \u22128.",
     qs:[
       {q:"What is \u22123 \u2212 5 ?", o:[
@@ -465,7 +511,7 @@ const C = {
         {t:"10", why:"You added the numbers instead of multiplying."}]}
     ]},
   fractions:{
-    name:"Adding fractions", ex:"1/2 + 1/3", pre:[],
+    name:"Adding fractions", ex:"1/2 + 1/3", pre:[], category:"foundations",
     lesson:"To add or subtract fractions, first give them the same bottom number (denominator). Change the tops to match, then add or subtract only the tops.<br><b>Example:</b> 1/2 + 1/3 becomes 3/6 + 2/6 = 5/6.",
     qs:[
       {q:"What is 1/2 + 1/3 ?", o:[
@@ -485,7 +531,7 @@ const C = {
         {t:"1/9", why:"You multiplied the fractions instead of adding them."}]}
     ]},
   decimals:{
-    name:"Decimals", ex:"0.5 + 0.25", pre:[],
+    name:"Decimals", ex:"0.5 + 0.25", pre:[], category:"foundations",
     lesson:"Line numbers up by the decimal point, not by the right-hand digit. Pad with zeros if it helps: 0.5 is the same as 0.50. To compare, compare place by place.<br><b>Example:</b> 0.5 + 0.25 = 0.50 + 0.25 = 0.75.",
     qs:[
       {q:"What is 0.5 + 0.25 ?", o:[
@@ -505,7 +551,7 @@ const C = {
         {t:"2.7", why:"You added instead of multiplying."}]}
     ]},
   fracmult:{
-    name:"Multiply fractions", ex:"2/3 \u00d7 3/4", pre:["fractions"],
+    name:"Multiply fractions", ex:"2/3 \u00d7 3/4", pre:["fractions"], category:"foundations",
     lesson:"To multiply fractions, multiply the tops and multiply the bottoms. To divide, flip the second fraction and multiply.<br><b>Example:</b> 2/3 \u00d7 3/4 = 6/12 = 1/2. And 3/5 \u00f7 3/10 = 3/5 \u00d7 10/3 = 2.",
     qs:[
       {q:"What is 2/3 \u00d7 3/4 ?", o:[
@@ -525,7 +571,7 @@ const C = {
         {t:"4 2/5", why:"You wrote the 4 next to the fraction instead of multiplying."}]}
     ]},
   exponents:{
-    name:"Exponents", ex:"(\u22123)\u00b2", pre:["integers"],
+    name:"Exponents", ex:"(\u22123)\u00b2", pre:["integers"], category:"foundations",
     lesson:"An exponent tells you how many times to multiply the base by itself. Brackets matter for signs. Anything to the power 0 is 1.<br><b>Example:</b> 2\u00b3 = 2 \u00d7 2 \u00d7 2 = 8. (\u22123)\u00b2 = (\u22123) \u00d7 (\u22123) = 9.",
     qs:[
       {q:"What is 2\u00b3 ?", o:[
@@ -545,7 +591,7 @@ const C = {
         {t:"50", why:"You wrote the digits side by side instead of using the exponent."}]}
     ]},
   oneStep:{
-    name:"One-step equations", ex:"x + 7 = 3", pre:["integers"],
+    name:"One-step equations", ex:"x + 7 = 3", pre:["integers"], category:"equations",
     lesson:"Undo the operation with its opposite, on both sides of the equals sign.<br><b>Example:</b> x + 7 = 3: subtract 7 from both sides, so x = \u22124. And x/4 = 6: multiply both sides by 4, so x = 24.",
     qs:[
       {q:"Solve: x + 7 = 3", o:[
@@ -565,7 +611,7 @@ const C = {
         {t:"x = \u2212100", why:"You multiplied by 5 instead of dividing."}]}
     ]},
   liketerms:{
-    name:"Like terms", ex:"4x + 3 \u2212 x + 2", pre:["integers"],
+    name:"Like terms", ex:"4x + 3 \u2212 x + 2", pre:["integers"], category:"expressions",
     lesson:"Only combine terms that have the same letter part. Keep the sign in front of each term.<br><b>Example:</b> 4x + 3 \u2212 x + 2 becomes (4x \u2212 x) + (3 + 2) = 3x + 5.",
     qs:[
       {q:"Simplify: 3x + 5x \u2212 2x", o:[
@@ -585,7 +631,7 @@ const C = {
         {t:"8a \u2212 3b", why:"You subtracted the last b instead of adding it."}]}
     ]},
   percent:{
-    name:"Percentages", ex:"15% off $40", pre:["fractions","decimals"],
+    name:"Percentages", ex:"15% off $40", pre:["fractions","decimals"], category:"foundations",
     lesson:"Percent means 'out of 100'. To find a percent of a number, turn it into a decimal (25% = 0.25) and multiply. A discount is taken away from the price.<br><b>Example:</b> 25% of 80 = 0.25 \u00d7 80 = 20. A $40 shirt at 15% off costs 40 \u00d7 0.85 = $34.",
     qs:[
       {q:"What is 25% of 80 ?", o:[
@@ -605,7 +651,7 @@ const C = {
         {t:"90%", why:"You subtracted 120 \u2212 30."}]}
     ]},
   ratio:{
-    name:"Ratios", ex:"3 pens for $4.50", pre:["fracmult"],
+    name:"Ratios", ex:"3 pens for $4.50", pre:["fracmult"], category:"foundations",
     lesson:"A ratio compares amounts. To scale it, multiply both parts by the same number. To simplify, divide both parts by their biggest shared factor.<br><b>Example:</b> 2 cups flour for 3 cups milk. For 9 cups milk, multiply both by 3: 6 cups flour. And 12:18 simplifies to 2:3.",
     qs:[
       {q:"A recipe uses 2 cups of flour for 3 cups of milk. How much flour goes with 9 cups of milk?", o:[
@@ -625,7 +671,7 @@ const C = {
         {t:"4 : 6", why:"That is a step in the right direction, but it can be simplified further."}]}
     ]},
   order:{
-    name:"Order of operations", ex:"3 + 4 \u00d7 2", pre:["integers","exponents"],
+    name:"Order of operations", ex:"3 + 4 \u00d7 2", pre:["integers","exponents"], category:"expressions",
     lesson:"Do brackets first, then powers, then multiplication and division, then addition and subtraction (BEDMAS / PEMDAS). Not simply left to right.<br><b>Example:</b> 3 + 4 \u00d7 2: do 4 \u00d7 2 = 8 first, then 3 + 8 = 11.",
     qs:[
       {q:"What is 3 + 4 \u00d7 2 ?", o:[
@@ -645,7 +691,7 @@ const C = {
         {t:"0", why:"You added 3 + 2 first and then multiplied by 4."}]}
     ]},
   distribute:{
-    name:"Distributive rule", ex:"3(x + 4)", pre:["integers","liketerms"],
+    name:"Distributive rule", ex:"3(x + 4)", pre:["integers","liketerms"], category:"expressions",
     lesson:"A number outside a bracket multiplies every term inside. Watch the signs.<br><b>Example:</b> \u22122(x \u2212 5) = (\u22122)(x) + (\u22122)(\u22125) = \u22122x + 10.",
     qs:[
       {q:"Expand: 3(x + 4)", o:[
@@ -665,7 +711,7 @@ const C = {
         {t:"5x + 4", why:"You flipped the sign of the final number."}]}
     ]},
   twoStep:{
-    name:"Two-step equations", ex:"3x + 5 = 20", pre:["oneStep"],
+    name:"Two-step equations", ex:"3x + 5 = 20", pre:["oneStep"], category:"equations",
     lesson:"Undo in reverse order: first undo the adding or subtracting, then undo the multiplying or dividing.<br><b>Example:</b> 3x + 5 = 20. Subtract 5: 3x = 15. Divide by 3: x = 5.",
     qs:[
       {q:"Solve: 3x + 5 = 20", o:[
@@ -685,7 +731,7 @@ const C = {
         {t:"x = 9", why:"You added 2 instead of subtracting it."}]}
     ]},
   evaluate:{
-    name:"Plugging in values", ex:"a\u00b2 + 3a, a = \u22122", pre:["order"],
+    name:"Plugging in values", ex:"a\u00b2 + 3a, a = \u22122", pre:["order"], category:"expressions",
     lesson:"Replace the letter with its value in brackets, then follow the order of operations.<br><b>Example:</b> If a = \u22122, then a\u00b2 + 3a = (\u22122)\u00b2 + 3(\u22122) = 4 + (\u22126) = \u22122.",
     qs:[
       {q:"If x = 3, what is 2x + 5 ?", o:[
@@ -705,7 +751,7 @@ const C = {
         {t:"29", why:"You wrote 4 next to 3 (34) instead of multiplying."}]}
     ]},
   inequal:{
-    name:"Inequalities", ex:"\u22123x > 12", pre:["twoStep"],
+    name:"Inequalities", ex:"\u22123x > 12", pre:["twoStep"], category:"equations",
     lesson:"Solve an inequality like an equation, with one big difference: if you multiply or divide both sides by a negative number, flip the sign.<br><b>Example:</b> \u22123x > 12. Divide by \u22123 and flip: x < \u22124.",
     qs:[
       {q:"Solve: 2x + 3 < 11", o:[
@@ -725,7 +771,7 @@ const C = {
         {t:"\u22123", why:"\u22123 \u2212 5 = \u22128, which is much less than 2."}]}
     ]},
   fracEq:{
-    name:"Fraction equations", ex:"(2/3)x = 8", pre:["twoStep","fracmult"],
+    name:"Fraction equations", ex:"(2/3)x = 8", pre:["twoStep","fracmult"], category:"equations",
     lesson:"To undo multiplying by a fraction, multiply by its flip (reciprocal). To clear a division by a number, multiply both sides by that number.<br><b>Example:</b> (2/3)x = 8. Multiply both sides by 3/2: x = 8 \u00d7 3/2 = 12.",
     qs:[
       {q:"Solve: (2/3)x = 8", o:[
@@ -745,7 +791,7 @@ const C = {
         {t:"x = 3", why:"You did 4 \u2212 1 and ignored the division by 3."}]}
     ]},
   target:{
-    name:"Multi-step equations", ex:"Brackets, x on both sides", pre:["twoStep","distribute","liketerms","fractions"],
+    name:"Multi-step equations", ex:"Brackets, x on both sides", pre:["twoStep","distribute","liketerms","fractions"], category:"equations",
     lesson:"Expand brackets, gather the x-terms on one side and the plain numbers on the other, then solve like a two-step equation.<br><b>Example:</b> 2(x + 3) = 14 becomes 2x + 6 = 14, then 2x = 8, so x = 4.",
     qs:[
       {q:"Solve: 2(x + 3) = 14", o:[
@@ -766,7 +812,7 @@ const C = {
     ]}
 };
 
-/* HELPERS — PRESERVED */
+/* HELPERS */
 const $ = s => document.querySelector(s);
 const STORE = "gapfinder_v2";
 const IDS = Object.keys(C);
@@ -783,6 +829,8 @@ const dcache = {};
 function depth(id){ return dcache[id] ??= (C[id].pre.length ? 1+Math.max(...C[id].pre.map(depth)) : 0); }
 function ancestors(id, out=new Set()){ C[id].pre.forEach(p=>{ out.add(p); ancestors(p,out); }); return out; }
 function dependents(id){ return IDS.filter(n => ancestors(n).has(id)); }
+
+/* DETERMINISTIC ENGLISH DATE FORMATTING */
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function fmtDate(d){
@@ -817,7 +865,26 @@ function scrollToPrivacy(){
   document.getElementById("privacySection").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
-/* MAP — layout logic preserved, visuals upgraded */
+/* TOPIC FILTERING */
+let activeCategory = 'all';
+function filterTopics(cat, btn){
+  activeCategory = cat;
+  document.querySelectorAll('.topic-filter-btn').forEach(b => {
+    const isAct = b === btn;
+    b.classList.toggle('active', isAct);
+    b.setAttribute('aria-selected', isAct ? 'true' : 'false');
+  });
+  document.querySelectorAll('#picks .topic-card').forEach(card => {
+    const topicCat = card.dataset.category;
+    if(cat === 'all' || topicCat === cat){
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+/* MAP */
 const NW = 168, NH = 44, COLW = 210, ROWH = 64;
 const POS = {};
 (function layout(){
@@ -837,23 +904,26 @@ function drawMap(results, roots, target){
       const sx=x1+NW/2, ex=x2-NW/2, mx=(sx+ex)/2;
       const bad = results[p] && !results[p].passed && results[id] && !results[id].passed;
       const active = roots.includes(p) || (results[p] && results[id]);
-      const stroke = bad ? '#d62056' : (active ? '#1c54d4' : '#c5d1e3');
-      const sw = bad ? 3 : (active ? 2 : 1.5);
+      const stroke = bad ? '#cf1c50' : (active ? '#1852d4' : '#c0cfdf');
+      const sw = bad ? 3 : (active ? 2.5 : 1.5);
       const dash = bad ? '' : 'stroke-dasharray="5 4"';
-      const op = bad ? '' : 'opacity=".7"';
+      const op = bad ? '' : 'opacity=".75"';
       edges += `<path d="M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}" fill="none" stroke="${stroke}" stroke-width="${sw}" ${dash} ${op}/>`;
     });
   });
   IDS.forEach(id=>{
     const [cx,cy]=POS[id], r=results[id];
-    let fill="#ffffff", stroke="#c5d1e3", sw=1.5, tag="";
-    if(r && r.passed){ fill="#e2f7ee"; stroke="#139a5f"; sw=2; }
-    if(r && !r.passed){ fill="#fce8ef"; stroke="#d62056"; sw=2; }
-    if(roots.includes(id)){ fill="#e89715"; stroke="#0f1b33"; sw=3; tag=`<text x="${cx}" y="${cy-NH/2-6}" text-anchor="middle" font-size="11" font-weight="700" fill="#0f1b33" font-family="Inter,sans-serif">START HERE</text>`; }
-    if(target === id && !roots.includes(id)){ sw=2.5; stroke="#1c54d4"; }
+    let fill="#ffffff", stroke="#c0cfdf", sw=1.5, tag="";
+    if(r && r.passed){ fill="#e2f7ed"; stroke="#0f8a52"; sw=2; }
+    if(r && !r.passed){ fill="#fcebee"; stroke="#cf1c50"; sw=2; }
+    if(roots.includes(id)){
+      fill="#ea920c"; stroke="#0b1528"; sw=3;
+      tag=`<text x="${cx}" y="${cy-NH/2-6}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#0b1528" font-family="Inter,sans-serif">START HERE (ROOT GAP)</text>`;
+    }
+    if(target === id && !roots.includes(id)){ sw=2.5; stroke="#1852d4"; }
     const fs = C[id].name.length > 18 ? 11.5 : 13;
     nodes += `${tag}<rect x="${cx-NW/2}" y="${cy-NH/2}" width="${NW}" height="${NH}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>
-      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="${fs}" font-weight="600" fill="#0f1b33" font-family="Inter,sans-serif">${C[id].name}</text>`;
+      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="${fs}" font-weight="600" fill="#0b1528" font-family="Inter,sans-serif">${C[id].name}</text>`;
   });
   return `<svg viewBox="0 0 ${MAPW} ${MAPH}" role="img" aria-label="Map of how the math topics build on each other">${edges}${nodes}</svg>`;
 }
@@ -863,12 +933,13 @@ function renderHome(){
   $("#homeMap").innerHTML = drawMap();
   const picks = $("#picks"); picks.innerHTML = "";
   const last = load();
-  IDS.filter(id => C[id].pre.length).sort((a,b)=>depth(b)-depth(a)).forEach(id=>{
+  IDS.slice().sort((a,b)=>depth(b)-depth(a)).forEach(id=>{
     const b = document.createElement("button");
     b.className = "topic-card";
+    b.dataset.category = C[id].category || 'equations';
     const d = depth(id);
-    const dLabel = d === 1 ? "1 level" : d + " levels";
-    let statusHtml = "";
+    const dLabel = d === 0 ? "Foundation" : (d === 1 ? "1 level down" : d + " levels down");
+    let statusHtml = `<div class="tc-status" style="color:var(--muted)">Ready to test</div>`;
     if(last && last.results && last.results[id]){
       statusHtml = last.results[id].passed
         ? `<div class="tc-status ok">Known</div>`
@@ -887,16 +958,16 @@ function renderHome(){
     const due = last.plan && last.plan.find(s => new Date(s.date) >= startOfToday());
     const div = document.createElement("div");
     div.className = "welcome-back fade-in";
-    div.innerHTML = `<div class="wb-info"><h3>Continue your repair</h3><p>The gap started at <b>${names}</b>. ${due ? `Next review: <span class="wb-date" translate="no">${fmtDate(new Date(due.date))}</span>` : "Your 1-week plan is finished. Check yourself again."}</p></div>`;
+    div.innerHTML = `<div class="wb-info"><h3>Resume your repair plan</h3><p>Your previous diagnostic found the gap at <b>${names}</b>. ${due ? `Next scheduled review: <span class="wb-date" translate="no">${fmtDate(new Date(due.date))}</span>` : "Your 1-week schedule is finished. Check yourself again."}</p></div>`;
     const b = document.createElement("button");
-    b.className = "btn btn-primary"; b.textContent = "Continue \u2192";
+    b.className = "btn btn-primary"; b.textContent = "Continue Repair \u2192";
     b.onclick = () => start(last.roots[0]);
     div.appendChild(b);
     wb.appendChild(div);
   }
 }
 
-/* QUIZ ENGINE — PRESERVED */
+/* QUIZ ENGINE */
 let S = null;
 function start(targetId){
   S = {target:targetId, stack:[targetId], results:{}, cur:null, qi:0, n:0, w:0, locked:false, checked:0, miss:[]};
@@ -910,14 +981,16 @@ function nextNode(){
 }
 function renderQ(){
   const c = C[S.cur], q = c.qs[S.qi];
-  $("#qMeta").textContent = `Checking: ${c.name}`;
+  const isTarget = S.cur === S.target;
+  $("#qMeta").textContent = isTarget ? `Checking target: ${c.name}` : `Tracing prerequisite: ${c.name}`;
   $("#qProgressLabel").textContent = `Question ${S.qi+1} of ${S.qi===2 ? 3 : 2}`;
   $("#qTieBreak").classList.toggle("hidden", S.qi !== 2);
   $("#qText").textContent = q.q;
   const box = $("#opts"); box.innerHTML = "";
   shuffle(q.o).forEach(o=>{
     const b = document.createElement("button");
-    b.className = "opt"; b.textContent = o.t;
+    b.className = "opt";
+    b.textContent = o.t;
     b.onclick = () => answer(o, b);
     const mark = document.createElement("span");
     mark.className = "opt-mark";
@@ -927,14 +1000,14 @@ function renderQ(){
   $("#fb").className = "feedback hidden";
   $("#next").classList.add("hidden");
   S.locked = false;
-  $("#bar").style.width = Math.min(95, 6 + (S.checked-1)*20 + S.qi*8) + "%";
+  $("#bar").style.width = Math.min(95, 6 + (S.checked-1)*20 + S.qi*10) + "%";
 }
 function answer(o, btn){
   if(S.locked) return; S.locked = true;
   const q = C[S.cur].qs[S.qi];
   document.querySelectorAll(".opt").forEach(b=>{
     b.disabled = true;
-    const btnText = b.firstChild.textContent;
+    const btnText = b.firstChild ? b.firstChild.textContent : b.textContent;
     const match = q.o.find(x => x.t === btnText);
     if(match && match.ok) b.classList.add("ok");
   });
@@ -942,11 +1015,11 @@ function answer(o, btn){
   if(o.ok){
     S.n++; btn.classList.add("ok");
     fb.className = "feedback good";
-    fb.innerHTML = `<span class="fb-title">Correct</span><span class="fb-body">You've got this. Let's keep going.</span>`;
+    fb.innerHTML = `<span class="fb-title">Solid Understanding</span><span class="fb-body">Correct. Your reasoning holds up.</span>`;
   } else {
     S.w++; btn.classList.add("bad");
     fb.className = "feedback wrong";
-    fb.innerHTML = `<span class="fb-title">Not quite</span><span class="fb-body">${o.why}</span>`;
+    fb.innerHTML = `<span class="fb-title">Misconception Identified</span><span class="fb-body">${o.why}</span>`;
     S.miss.push({node:S.cur, text:o.why, q:q.q});
   }
   const done = S.n >= 2 || S.w >= 2;
@@ -965,7 +1038,7 @@ $("#next").onclick = () => {
 };
 $("#quit").onclick = () => { S = null; renderHome(); show("home"); };
 
-/* RESULT — diagnosis logic preserved, presentation upgraded */
+/* RESULT ENGINE */
 function finish(){
   const checkedIds = Object.keys(S.results);
   const failed = checkedIds.filter(id => !S.results[id].passed);
@@ -973,11 +1046,11 @@ function finish(){
 
   if(!failed.length){
     view.innerHTML = `
-      <div class="wrap result-container">
+      <div class="wrap result-container fade-in">
         <div class="result-no-gap">
           <div class="rh-eyebrow" style="color:var(--green)">All clear</div>
           <h2>No gap found in ${C[S.target].name}</h2>
-          <p class="rh-sub" style="margin-top:8px">You answered correctly. Try a harder topic, or check a different one that feels shaky.</p>
+          <p class="rh-sub" style="margin-top:8px">All diagnostic checks were answered correctly. Your foundational understanding here is secure. You can try a harder multi-step topic, or check another area you want to reinforce.</p>
         </div>
         <div class="mapbox">${drawMap(S.results, [], S.target)}</div>
         <div class="legend">
@@ -985,8 +1058,8 @@ function finish(){
           <span class="lg unchecked"><span class="sw"></span>Not needed</span>
           <span class="lg target"><span class="sw"></span>Current topic</span>
         </div>
-        <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="goHome()">Check another topic \u2192</button>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-lg" onclick="goHome()">Check another topic \u2192</button>
         </div>
       </div>`;
     show("result");
@@ -1030,7 +1103,7 @@ function finish(){
   const lessons = roots.map(r=>`<div class="lesson-card">
     <div class="lc-head"><div class="lc-icon">&sum;</div><h3>${C[r].name}</h3></div>
     <div class="lc-body">${C[r].lesson}</div>
-    <div class="lc-actions"><button class="btn btn-secondary btn-sm recheck" data-id="${r}">Re-check ${C[r].name} \u2192</button></div>
+    <div class="lc-actions"><button class="btn btn-primary recheck" data-id="${r}">Re-check ${C[r].name} \u2192</button></div>
   </div>`).join("");
 
   const planRows = plan.map((p,i)=>`<div class="tl-item">
@@ -1048,6 +1121,40 @@ function finish(){
         ${unlockHtml}
       </div>
 
+      <div class="journey-stepper" aria-label="Investigation summary">
+        <div class="js-item">
+          <span class="js-num">1</span>
+          <div class="js-text">
+            <span class="js-label">You Chose</span>
+            <span class="js-val">${C[S.target].name}</span>
+          </div>
+        </div>
+        <div class="js-sep">&rarr;</div>
+        <div class="js-item">
+          <span class="js-num">2</span>
+          <div class="js-text">
+            <span class="js-label">Investigated</span>
+            <span class="js-val">${checkedIds.length} Concepts Checked</span>
+          </div>
+        </div>
+        <div class="js-sep">&rarr;</div>
+        <div class="js-item active">
+          <span class="js-num">&star;</span>
+          <div class="js-text">
+            <span class="js-label">Root Cause</span>
+            <span class="js-val">${roots.map(r=>C[r].name).join(", ")}</span>
+          </div>
+        </div>
+        <div class="js-sep">&rarr;</div>
+        <div class="js-item">
+          <span class="js-num">4</span>
+          <div class="js-text">
+            <span class="js-label">Repair</span>
+            <span class="js-val">Mini-Lesson &amp; Schedule</span>
+          </div>
+        </div>
+      </div>
+
       <div class="diag-grid">
         <div class="diag-cell"><div class="dc-val">${checkedIds.length}</div><div class="dc-label">Topics checked</div></div>
         <div class="diag-cell solid"><div class="dc-val">${solid}</div><div class="dc-label">Solid</div></div>
@@ -1055,9 +1162,10 @@ function finish(){
         <div class="diag-cell root"><div class="dc-val">${roots.length}</div><div class="dc-label">Root gap${roots.length>1?'s':''}</div></div>
       </div>
 
-      <div class="section-head" style="margin-top:28px">
-        <span class="eyebrow">The Trace</span>
+      <div class="section-head" style="margin-top:32px">
+        <span class="eyebrow">The Diagnostic Trace</span>
         <h2>From what you chose to where it starts</h2>
+        <p>This linear chain shows each step back through your prerequisite tree until we found the earliest missing link.</p>
       </div>
       <div class="trace-path">${traceHtml}</div>
 
@@ -1072,31 +1180,33 @@ function finish(){
 
       <div class="section-gap">
         <div class="section-head">
-          <span class="eyebrow">What went wrong</span>
-          <h2>Your exact mistakes, explained</h2>
+          <span class="eyebrow">Exact Mistakes Identified</span>
+          <h2>What went wrong</h2>
+          <p>Every slip is linked to a concrete mathematical misunderstanding:</p>
         </div>
         ${missHtml}
       </div>
 
       <div class="section-gap">
         <div class="section-head">
-          <span class="eyebrow">Fix the root</span>
+          <span class="eyebrow">Repair the Root Gap</span>
           <h2>Mini-lesson${roots.length>1?'s':''} for the gap</h2>
+          <p>Review the core rule, see why students slip, and re-check this concept before moving ahead.</p>
         </div>
         ${lessons}
       </div>
 
       <div class="section-gap">
         <div class="section-head">
-          <span class="eyebrow">Review plan</span>
+          <span class="eyebrow">Review Plan</span>
           <h2>Your 1-week schedule</h2>
           <p>Spaced repetition: today, +1 day, +3 days, +7 days. Check off each step as you complete it.</p>
         </div>
         <div class="card card-pad"><div class="timeline" id="timeline" translate="no">${planRows}</div></div>
       </div>
 
-      <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="goHome()">Check another topic \u2192</button>
+      <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-lg" onclick="goHome()">Check another topic \u2192</button>
       </div>
     </div>`;
   show("result");
@@ -1123,11 +1233,21 @@ window.addEventListener("scroll", () => {
   else h.classList.remove("scrolled");
 }, {passive:true});
 
-/* KEYBOARD */
+/* KEYBOARD NAVIGATION */
 document.addEventListener("keydown", (e) => {
-  if(e.key === "Enter" && !document.getElementById("quiz").classList.contains("hidden")){
-    const next = $("#next");
-    if(!next.classList.contains("hidden") && document.activeElement !== next) next.click();
+  const quizEl = document.getElementById("quiz");
+  if(quizEl && !quizEl.classList.contains("hidden")){
+    if(["1","2","3","4"].includes(e.key)){
+      const opts = document.querySelectorAll("#opts .opt");
+      const idx = parseInt(e.key, 10) - 1;
+      if(opts[idx] && !opts[idx].disabled){
+        opts[idx].click();
+      }
+    }
+    if(e.key === "Enter"){
+      const next = $("#next");
+      if(!next.classList.contains("hidden") && document.activeElement !== next) next.click();
+    }
   }
 });
 

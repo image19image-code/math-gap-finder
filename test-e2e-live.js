@@ -58,12 +58,38 @@ async function run() {
   if (!targetCard) throw new Error('Topic card not found');
   targetCard.click();
 
-  // Fail 2 questions to trigger prereq check, then fail 2 more to complete quiz
-  for (let round = 0; round < 4; round++) {
+  // Fail questions to trigger prerequisite check and generate review plan
+  const scriptMatch = html.match(/const C = ([\s\S]*?);\s*\/\* HELPERS/);
+  let C_data = null;
+  try {
+    eval("C_data = " + scriptMatch[1]);
+  } catch(e){}
+
+  let guard = 0;
+  while (!document.querySelector('#quiz').classList.contains('hidden') && guard < 20) {
+    guard++;
     const opts = document.querySelectorAll('#opts .opt');
     if (!opts.length) break;
-    // Click wrong option
-    opts[opts.length - 1].click();
+    const qText = document.querySelector('#qText').textContent;
+    let wrongText = null;
+    if (C_data) {
+      for (const k of Object.keys(C_data)) {
+        const found = C_data[k].qs.find(q => q.q === qText);
+        if (found) {
+          const w = found.o.find(o => !o.ok);
+          if (w) wrongText = w.t;
+          break;
+        }
+      }
+    }
+    let targetOpt = opts[0];
+    if (wrongText) {
+      for (const o of opts) {
+        const t = o.firstChild ? o.firstChild.textContent : o.textContent;
+        if (t === wrongText) { targetOpt = o; break; }
+      }
+    }
+    targetOpt.click();
     const nextBtn = document.querySelector('#next');
     if (nextBtn) nextBtn.click();
   }

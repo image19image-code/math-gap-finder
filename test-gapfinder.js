@@ -97,7 +97,7 @@ function answerWrong(d) {
 console.log('\n=== TEST 1: Home page loads ===');
 assert(getVisibleView(doc) === 'home', 'Home view visible');
 assert(doc.querySelector('#homeMap svg') !== null, 'Map SVG rendered');
-assert(doc.querySelectorAll('#picks .topic-card').length === 13, '13 topic cards (topics with prereqs)');
+assert(doc.querySelectorAll('#picks .topic-card').length === 16, '16 topic cards (all 16 topics in dataset)');
 assert(doc.querySelector('#welcomeBack .welcome-back') === null, 'No welcome-back on first visit');
 
 // ===== TEST 2: Choose topic, answer all correctly =====
@@ -450,6 +450,17 @@ arPlanItems.forEach((t, i) => {
   assert(!/[\u0600-\u06FF]/.test(day), `Arabic env day ${i+1} has no Arabic chars`);
   assert(!/[\u0600-\u06FF]/.test(rel), `Arabic env rel ${i+1} has no Arabic chars: "${rel}"`);
 });
+
+// ===== TEST 15: Root topic diagnosis (all 16 topics clickable) =====
+console.log('\n=== TEST 15: Root topic diagnosis ===');
+const rootContext = makeDOM(html, scriptCode, {});
+const intCard = Array.from(rootContext.doc.querySelectorAll('#picks .topic-card'))
+  .find(b => b.getAttribute('aria-label') === 'Diagnose Negative numbers');
+assert(intCard !== undefined, 'Negative numbers card exists in topic picker');
+assert(intCard.querySelector('.tc-depth').textContent === 'Foundation', 'Root topic has Foundation depth label');
+intCard.click();
+assert(getVisibleView(rootContext.doc) === 'quiz', 'Quiz started for Negative numbers');
+assert(rootContext.win.__S().target === 'integers', 'Target is integers');
 
 // ===== SUMMARY =====
 console.log('\n=== SUMMARY ===');
