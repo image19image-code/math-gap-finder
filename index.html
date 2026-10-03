@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1528'/><text x='16' y='22' font-family='serif' font-size='20' font-weight='bold' fill='%23ffffff' text-anchor='middle'>%E2%88%91</text></svg>">
 <style>
 :root{
   --ink:#0b1528; --ink-2:#19273f; --slate:#384860; --muted:#556680; --muted-2:#8294ac;
@@ -315,6 +316,12 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 .stagger>*:nth-child(5){animation-delay:.25s}
 .stagger>*:nth-child(6){animation-delay:.3s}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.pulse{animation:none}}
+@media(forced-colors:active){button,.opt,.topic-card,.trace-node,.diag-cell{outline:2px solid ButtonText}}
+@media print{
+  header.site,footer.site,.hero-ctas,.trust-bar,.topic-filters,#quit,#next,.map-hint{display:none!important}
+  body{background:#fff;color:#000;font-size:12pt}
+  .result-hero,.card,.lesson-card,.trace-node{border:1px solid #ccc;box-shadow:none;break-inside:avoid}
+}
 
 /* RESPONSIVE BREAKPOINTS (360px, 390px, 768px, 1280px) */
 @media(max-width:768px){
@@ -344,7 +351,7 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
 
 <header class="site" id="siteHeader">
   <div class="wrap">
-    <div class="brand" onclick="goHome()" role="button" tabindex="0" aria-label="Gap Finder home">
+    <div class="brand" onclick="goHome()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}" role="button" tabindex="0" aria-label="Gap Finder home">
       <span class="mark" aria-hidden="true">&sum;</span>Gap Finder
       <span class="badge-tag">Pre-Algebra &amp; Middle School</span>
     </div>
@@ -418,9 +425,9 @@ footer.site .footer-brand .mark{width:28px;height:28px;display:grid;place-items:
       </div>
       <div class="topic-filters" role="tablist" aria-label="Filter topics by category">
         <button class="topic-filter-btn active" onclick="filterTopics('all', this)" role="tab" aria-selected="true">All Topics (16)</button>
-        <button class="topic-filter-btn" onclick="filterTopics('equations', this)" role="tab" aria-selected="false">Equations &amp; Solving</button>
-        <button class="topic-filter-btn" onclick="filterTopics('expressions', this)" role="tab" aria-selected="false">Expressions &amp; Rules</button>
-        <button class="topic-filter-btn" onclick="filterTopics('foundations', this)" role="tab" aria-selected="false">Arithmetic &amp; Powers</button>
+        <button class="topic-filter-btn" onclick="filterTopics('equations', this)" role="tab" aria-selected="false">Equations &amp; Solving (5)</button>
+        <button class="topic-filter-btn" onclick="filterTopics('expressions', this)" role="tab" aria-selected="false">Expressions &amp; Rules (4)</button>
+        <button class="topic-filter-btn" onclick="filterTopics('foundations', this)" role="tab" aria-selected="false">Arithmetic &amp; Powers (7)</button>
       </div>
       <div class="topics-grid" id="picks"></div>
     </div>
@@ -852,7 +859,16 @@ function relDate(d){
 }
 
 /* NAVIGATION */
-function goHome(){ S = null; renderHome(); show("home"); }
+function goHome(){
+  S = null;
+  activeCategory = 'all';
+  document.querySelectorAll('.topic-filter-btn').forEach((b,i)=>{
+    b.classList.toggle('active', i===0);
+    b.setAttribute('aria-selected', i===0 ? 'true' : 'false');
+  });
+  renderHome();
+  show("home");
+}
 function scrollToTopics(){
   if(document.getElementById("home").classList.contains("hidden")) goHome();
   setTimeout(()=>{ document.getElementById("topicsSection").scrollIntoView({behavior:"smooth",block:"start"}); }, 50);
@@ -1109,7 +1125,7 @@ function finish(){
   const planRows = plan.map((p,i)=>`<div class="tl-item">
     <div class="tl-date" translate="no"><div class="tl-d-day">${fmtDate(new Date(p.date))}</div><div class="tl-d-rel">${relDate(p.date)}</div></div>
     <div class="tl-body"><div class="tl-label">${p.label}</div></div>
-    <button class="tl-check" data-idx="${i}" aria-label="Mark as done"></button>
+    <button class="tl-check ${p.done ? 'done' : ''}" data-idx="${i}" aria-label="${p.done ? 'Mark as not done' : 'Mark as done'}" aria-pressed="${p.done ? 'true' : 'false'}"></button>
   </div>`).join("");
 
   view.innerHTML = `
@@ -1206,7 +1222,8 @@ function finish(){
       </div>
 
       <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
-        <button class="btn btn-primary btn-lg" onclick="goHome()">Check another topic \u2192</button>
+        <button class="btn btn-primary btn-lg recheck" data-id="${roots[0]}">Re-check ${C[roots[0]].name} Now \u2192</button>
+        <button class="btn btn-secondary btn-lg" onclick="goHome()">Check another topic</button>
       </div>
     </div>`;
   show("result");
@@ -1220,7 +1237,10 @@ function finish(){
       if(saved && saved.plan){
         saved.plan[idx].done = !saved.plan[idx].done;
         save(saved);
-        btn.classList.toggle("done");
+        const isDone = saved.plan[idx].done;
+        btn.classList.toggle("done", isDone);
+        btn.setAttribute("aria-pressed", isDone ? "true" : "false");
+        btn.setAttribute("aria-label", isDone ? "Mark as not done" : "Mark as done");
       }
     };
   });
@@ -1247,6 +1267,9 @@ document.addEventListener("keydown", (e) => {
     if(e.key === "Enter"){
       const next = $("#next");
       if(!next.classList.contains("hidden") && document.activeElement !== next) next.click();
+    }
+    if(e.key === "Escape"){
+      $("#quit").click();
     }
   }
 });
